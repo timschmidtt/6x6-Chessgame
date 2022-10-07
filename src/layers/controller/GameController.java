@@ -9,9 +9,6 @@ import layers.model.actors.Player;
 import layers.model.actors.player.HumanPlayer;
 import layers.model.pieces.Piece;
 import layers.view.View;
-import programloader.Program;
-import programloader.ProgramManager;
-
 import java.util.List;
 
 public class GameController {
@@ -37,13 +34,12 @@ public class GameController {
     getModel().setCurrentPlayer(players[0]);
   }
 
+  /*
   public synchronized void startNewDummyGame() {
     restartGame();
     ProgramManager programManager = new ProgramManager();
-    List<Program> programList = programManager.getPrograms();
-    Player[] players = new Player[2];
-    players[0] = programManager.loadPlayer(programList.get(0), false, "Spieler A");
-    players[1] = programManager.loadPlayer(programList.get(0), true, "Spieler B");
+    players[0] = ;
+    players[1] = ;
     this.view.getStartButton().setDisable(true);
     this.view.getStopButton().setDisable(false);
     this.model.setPlayers(players);
@@ -51,6 +47,7 @@ public class GameController {
     this.model.getBoard().addObserver(this.view.getBoardPanel());
     this.model.start();
   }
+   */
 
   public void respondToReleasedMouse(MouseEvent mouseEvent) {
     Tuple<Integer, Integer> endCoordinates = this.view.getBoardPanel().getCoordinates(mouseEvent);

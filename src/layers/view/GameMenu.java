@@ -10,9 +10,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import programloader.Program;
 import programloader.ProgramManager;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -74,12 +75,14 @@ public class GameMenu {
         RadioMenuItem radioItem1 = new RadioMenuItem("_Mensch");
         RadioMenuItem radioItem2 = new RadioMenuItem("_Computer");
 
-        this.programManager.getPrograms().forEach(program -> {
-            RadioMenuItem radioMenuItem = new RadioMenuItem("_" + program.getClassName());
+        // Retrieves all keys (the file names) of the HashMap from the program manager
+        // to display them in the menu
+        HashMap<String, Program> hashMap = this.programManager.getProgramHashMap();
+        for (String programFileName: hashMap.keySet()) {
+            RadioMenuItem radioMenuItem = new RadioMenuItem("_" + programFileName);
             radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png", 20));
             menu2.getItems().add(radioMenuItem);
-        });
-
+        }
 
         // Set icons
         radioItem1.setGraphic(getIcon("/viewIcons/human.png", 20));
@@ -104,11 +107,14 @@ public class GameMenu {
         RadioMenuItem radioItem3 = new RadioMenuItem("_Mensch");
         RadioMenuItem radioItem4 = new RadioMenuItem("_Computer");
 
-        this.programManager.getPrograms().forEach(program -> {
-            RadioMenuItem radioMenuItem = new RadioMenuItem("_" + program.getClassName());
+        // Retrieves all keys (the file names) of the HashMap from the program manager
+        // to display them in the menu
+        HashMap<String, Program> hashMap = this.programManager.getProgramHashMap();
+        for (String programFileName: hashMap.keySet()) {
+            RadioMenuItem radioMenuItem = new RadioMenuItem("_" + programFileName);
             radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png", 20));
             menu3.getItems().add(radioMenuItem);
-        });
+        }
 
         // Set icons
         radioItem3.setGraphic(getIcon("/viewIcons/human.png", 20));

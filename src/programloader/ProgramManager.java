@@ -2,39 +2,69 @@ package programloader;
 
 
 import layers.model.actors.Player;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.JarURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.jar.Attributes;
 
+/**
+ * The ProgramManager is a class to load all jar files from the program directory. At the initialization
+ * it will automatically check for every jar file if a class of a {@link Player} is found and try if this
+ * class can be loaded and then put it into a HashMap that can be accessed by getter.
+ */
 public class ProgramManager {
 
     private static final String PATH = "programs";
-    private final List<Program> programs;
+    private final HashMap<String, Program> programHashMap;
 
     public ProgramManager() {
-        this.programs = new ArrayList<>();
-        readOutFile();
+        this.programHashMap = new HashMap<>();
+        readOutProgramsFolder();
     }
 
-    private void readOutFile() {
+    /**
+     * Can load a program (class of {@link Player}) dynamically while the runtime into a game.
+     *
+     * @param program The program to load.
+     * @param playerColor The color of the player.
+     * @param playerName The name of the player.
+     *
+     * @return A class of player.
+     */
+    public Player loadPlayerJarFile(Program program, boolean playerColor, String playerName) {
+        try {
+            JARClassLoader classLoader = new JARClassLoader(program.getJarFilePath());
+            Class<?> loadedClass = classLoader.loadClass(program.getClassFilePath());
+            Constructor<?> constructor = loadedClass.getDeclaredConstructor(Boolean.class, String.class);
+            Object player = constructor.newInstance(playerColor, playerName);
+            return (Player) player;
+        } catch (Throwable th) {
+            th.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * This method will check for every file in the programs folder if it is a jar file and then
+     * try if it's loadable {@link #checkLoading(String, String, boolean, String)}. If this is
+     * the case the program will be added to a HashMap.
+     */
+    private void readOutProgramsFolder() {
         File programFiles = new File(PATH);
         String[] fileNames = programFiles.list();
         if (fileNames != null) {
-            for (String fileName : fileNames) {
-                if (fileName.toLowerCase().endsWith(".jar")) {
-                    String pathName = ProgramManager.PATH + File.separator + fileName;
-                    String programName = this.getProgramClassName(pathName);
-                    if (programName != null) {
-                        boolean colorW = this.checkLoading(pathName, programName, true, "Spieler A");
-                        boolean colorB = this.checkLoading(pathName, programName, false, "Spieler B");
+            for (String jarFileName : fileNames) {
+                if (jarFileName.toLowerCase().endsWith(".jar")) {
+                    String jarFilePath = ProgramManager.PATH + File.separator + jarFileName;
+                    String classFilePath = this.getClassFilePath(jarFilePath);
+                    if (classFilePath != null) {
+                        boolean colorW = this.checkLoading(jarFilePath, classFilePath, true, "Spieler A");
+                        boolean colorB = this.checkLoading(jarFilePath, classFilePath, false, "Spieler B");
                         if (colorW && colorB) {
-                            this.programs.add(new Program(fileName, programName, pathName));
+                            this.programHashMap.put(jarFileName, new Program(jarFileName, jarFilePath, classFilePath));
                         }
                     }
                 }
@@ -43,30 +73,40 @@ public class ProgramManager {
     }
 
     /**
-     * Ermittelt den Wert des Attributs "Player" in der Manifest-Datei der
-     * angegebenen jar-Datei
+     * Gets the value of the player attribute in the manifest file of the
+     * specified jar file.
      *
-     * @param jarPathAndFilename Pfad (Ordner + Name) der jar-Datei
-     * @return der Wert des Attributs Player
+     * @param jarFilePath Path (folder + name) of the jar file.
+     * @return the value of the Player attribute.
      */
-    private String getProgramClassName(String jarPathAndFilename) {
+    private String getClassFilePath(String jarFilePath) {
         try {
-            URL fileURL = new URL("file:" + jarPathAndFilename);
+            URL fileURL = new URL("file:" + jarFilePath);
             URL jarURL = new URL("jar", "", fileURL + "!/");
             JarURLConnection urlConnection = (JarURLConnection) jarURL.openConnection();
             Attributes attributes = urlConnection.getMainAttributes();
-            return attributes != null ? attributes.getValue("Player"): null;
+            return attributes != null ? attributes.getValue("Player") : null;
         } catch (IOException e) {
             return null;
         }
     }
 
-    private boolean checkLoading(String jarFileName, String className, boolean color, String playerName) {
+    /**
+     * Checks if the given jar file with a specified class file path could be loaded.
+     *
+     * @param jarFilePath The jar file path.
+     * @param classFilePath The class file path from the manifest.
+     * @param playerColor The player color.
+     * @param playerName The player name.
+     *
+     * @return A boolean if the jar file can be loaded.
+     */
+    private boolean checkLoading(String jarFilePath, String classFilePath, boolean playerColor, String playerName) {
         try {
-            JARClassLoader classLoader = new JARClassLoader(jarFileName);
-            Class<?> cl = classLoader.loadClass(className);
+            JARClassLoader classLoader = new JARClassLoader(jarFilePath);
+            Class<?> cl = classLoader.loadClass(classFilePath);
             Constructor<?> constructor = cl.getDeclaredConstructor(Boolean.class, String.class);
-            Object player = constructor.newInstance(color, playerName);
+            Object player = constructor.newInstance(playerColor, playerName);
             return player instanceof Player;
         } catch (Throwable th) {
             th.printStackTrace();
@@ -74,21 +114,7 @@ public class ProgramManager {
         }
     }
 
-    public Player loadPlayer(Program program, boolean color, String playerName) {
-        try {
-            JARClassLoader classLoader = new JARClassLoader(program.getProgram());
-            Class<?> cl = classLoader.loadClass(program.getClassName());
-            Constructor<?> constructor = cl.getDeclaredConstructor(Boolean.class, String.class);
-            Object player = constructor.newInstance(color, playerName);
-            return (Player) player;
-        }
-        catch (Throwable th) {
-            th.printStackTrace();
-            return null;
-        }
-    }
-
-    public List<Program> getPrograms() {
-        return this.programs;
+    public HashMap<String, Program> getProgramHashMap() {
+        return this.programHashMap;
     }
 }

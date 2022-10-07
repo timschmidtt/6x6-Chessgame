@@ -2,38 +2,37 @@ package programloader;
 
 public class Program {
 
-  private String className;
+  private String jarFileName;
+  private String jarFilePath;
+  private String classFilePath;
 
-  private String program;
-  private String path;
-
-  public Program(String className, String program, String path) {
-    this.className = className;
-    this.program = program;
-    this.path = path;
+  public Program(String jarFileName, String jarFilePath, String classFilePath) {
+    this.jarFileName = jarFileName;
+    this.jarFilePath = jarFilePath;
+    this.classFilePath = classFilePath;
   }
 
-  public String getClassName() {
-    return className;
+  public String getJarFileName() {
+    return jarFileName;
   }
 
-  public void setClassName(String className) {
-    this.className = className;
+  public void setJarFileName(String jarFileName) {
+    this.jarFileName = jarFileName;
   }
 
-  public String getProgram() {
-    return program;
+  public String getJarFilePath() {
+    return jarFilePath;
   }
 
-  public void setProgram(String program) {
-    this.program = program;
+  public void setJarFilePath(String jarFilePath) {
+    this.jarFilePath = jarFilePath;
   }
 
-  public String getPath() {
-    return path;
+  public String getClassFilePath() {
+    return classFilePath;
   }
 
-  public void setPath(String path) {
-    this.path = path;
+  public void setClassFilePath(String classFilePath) {
+    this.classFilePath = classFilePath;
   }
 }

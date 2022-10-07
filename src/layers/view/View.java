@@ -4,29 +4,10 @@ import javafx.application.Application;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -41,8 +22,6 @@ public class View extends Application {
     private final GameModel gameModel;
     private GameController gameController;
     private BoardPanel chessBoardPanel;
-
-    private String[] programNames;
 
     // Declaration of the buttons
     private Button openButton;
@@ -80,10 +59,10 @@ public class View extends Application {
         this.startButton = new Button();
         this.stopButton = new Button();
         // Set the images of the buttons
-        this.openButton.setGraphic(getIcon("/viewIcons/open_folder.png", 25));
-        this.saveButton.setGraphic(getIcon("/viewIcons/save_button.png", 25));
-        this.startButton.setGraphic(getIcon("/viewIcons/play_button.png", 25));
-        this.stopButton.setGraphic(getIcon("/viewIcons/stop_button.png", 25));
+        this.openButton.setGraphic(getIcon("/viewIcons/open_folder.png"));
+        this.saveButton.setGraphic(getIcon("/viewIcons/save_button.png"));
+        this.startButton.setGraphic(getIcon("/viewIcons/play_button.png"));
+        this.stopButton.setGraphic(getIcon("/viewIcons/stop_button.png"));
         // Create the toolbar and add its buttons
         ToolBar toolBar = new ToolBar();
         toolBar.getItems().add(this.openButton);
@@ -131,89 +110,10 @@ public class View extends Application {
         stage.show();
     }
 
-    /**
-     * Creates the first menu for the menuBar.
-     *
-     * @return a menu for the game.
-     */
-    private Menu createMenu1() {
-        Menu menu1 = new Menu("_Spiel");
-        MenuItem menuItem1 = new MenuItem("_Öffnen");
-        MenuItem menuItem2 = new MenuItem("_Drucken");
-        MenuItem menuItem3 = new MenuItem("_Starten");
-        MenuItem menuItem4 = new MenuItem("_Stoppen");
-        MenuItem menuItem5 = new MenuItem("_Beenden");
-        // Set icons
-        menuItem1.setGraphic(getIcon("/viewIcons/open_folder.png", 20));
-        menuItem2.setGraphic(getIcon("/viewIcons/print_button.png", 20));
-        menuItem3.setGraphic(getIcon("/viewIcons/play_button.png", 20));
-        menuItem4.setGraphic(getIcon("/viewIcons/stop_button.png", 20));
-        menuItem5.setGraphic(getIcon("/viewIcons/close.png", 20));
-        // Set Accelerators
-        menuItem1.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
-        menuItem2.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN));
-        menuItem3.setAccelerator(new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN));
-        menuItem4.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
-        menuItem5.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
-        // Add items to menu
-        menu1.getItems().add(menuItem1);
-        menu1.getItems().add(new SeparatorMenuItem());
-        menu1.getItems().add(menuItem2);
-        menu1.getItems().add(menuItem3);
-        menu1.getItems().add(new SeparatorMenuItem());
-        menu1.getItems().add(menuItem4);
-        menu1.getItems().add(menuItem5);
-        return menu1;
-    }
-
-    /**
-     * Creates the second menu for the menuBar.
-     *
-     * @return a menu for player A.
-     */
-    private Menu createMenu2() {
-        Menu menu2 = new Menu("Spieler_A");
-        RadioMenuItem radioItem1 = new RadioMenuItem("_Mensch");
-        RadioMenuItem radioItem2 = new RadioMenuItem("_Computer");
-        // Set icons
-        radioItem1.setGraphic(getIcon("/viewIcons/human.png", 20));
-        radioItem2.setGraphic(getIcon("/viewIcons/AI.png", 20));
-        // Add to menu
-        menu2.getItems().add(radioItem1);
-        menu2.getItems().add(radioItem2);
-        // Make sure that the radio buttons cant be selected at the same time
-        ToggleGroup toggleGroup1 = new ToggleGroup();
-        radioItem1.setToggleGroup(toggleGroup1);
-        radioItem2.setToggleGroup(toggleGroup1);
-        return menu2;
-    }
-
-    /**
-     * Creates the third menu for the menuBar.
-     *
-     * @return a menu for player B.
-     */
-    private Menu createMenu3() {
-        Menu menu3 = new Menu("Spieler_B");
-        RadioMenuItem radioItem3 = new RadioMenuItem("_Mensch");
-        RadioMenuItem radioItem4 = new RadioMenuItem("_Computer");
-        // Set icons
-        radioItem3.setGraphic(getIcon("/viewIcons/human.png", 20));
-        radioItem4.setGraphic(getIcon("/viewIcons/AI.png", 20));
-        // Add to menu
-        menu3.getItems().add(radioItem3);
-        menu3.getItems().add(radioItem4);
-        // Make sure that the radio buttons cant be selected at the same time
-        ToggleGroup toggleGroup2 = new ToggleGroup();
-        radioItem3.setToggleGroup(toggleGroup2);
-        radioItem4.setToggleGroup(toggleGroup2);
-        return menu3;
-    }
-
     public void setOnAction() {
         this.openButton.setOnAction(actionEvent -> this.gameController.openNewGameGui());
         this.saveButton.setOnAction(actionEvent -> this.gameController.saveCurrentGame());
-        this.startButton.setOnAction(actionEvent -> this.gameController.startNewDummyGame());
+        // this.startButton.setOnAction(actionEvent -> this.gameController.startNewDummyGame());
         this.stopButton.setOnAction(actionEvent -> this.gameController.stopGame());
     }
 
@@ -221,13 +121,13 @@ public class View extends Application {
      * Method for getting an Imageview from an url.
      *
      * @param url  the path of the image resource
-     * @param size the size the imageview need to have
      * @return An imageview.
      */
-    private ImageView getIcon(String url, int size) {
+    private ImageView getIcon(String url) {
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(url)));
         ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(size);
+        int ICON_SIZE = 25;
+        imageView.setFitHeight(ICON_SIZE);
         imageView.setPreserveRatio(true);
         return imageView;
     }

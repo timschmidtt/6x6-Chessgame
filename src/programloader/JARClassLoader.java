@@ -6,10 +6,10 @@ import java.net.URLClassLoader;
 
 final class JARClassLoader extends URLClassLoader {
   /**
-   * Initialisiert einen Classloader zum Laden von Klassen aus jar-Dateien
+   * Initializes a classloader to load classes from jar files.
    *
-   * @param jarPathAndFilename Pfad (Ordner + Name) der jar-Datei
-   * @throws MalformedURLException wird bei fehlerhaften Angaben geworfen
+   * @param jarPathAndFilename Path (folder + name) of the jar file.
+   * @throws MalformedURLException will be thrown if there are errors
    */
   public JARClassLoader(String jarPathAndFilename) throws MalformedURLException {
     super(new URL[]{});
