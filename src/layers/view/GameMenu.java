@@ -77,6 +77,11 @@ public class GameMenu {
     private Menu createMenu2() {
         Menu menu2 = new Menu("Spieler_A");
         RadioMenuItem radioItem1 = new RadioMenuItem("_Mensch");
+        radioItem1.setOnAction(actionEvent -> this.selectedPrograms = new Tuple<>(radioItem1.getText(), this.selectedPrograms.getSecond()));
+
+        // Make sure that the radio buttons cant be selected at the same time
+        ToggleGroup toggleGroup1 = new ToggleGroup();
+        radioItem1.setToggleGroup(toggleGroup1);
 
         // Retrieves all keys (the file names) of the HashMap from the program manager
         // to display them in the menu
@@ -84,6 +89,7 @@ public class GameMenu {
         for (String programFileName: hashMap.keySet()) {
             RadioMenuItem radioMenuItem = new RadioMenuItem(programFileName);
             radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png", 20));
+            radioMenuItem.setToggleGroup(toggleGroup1);
             radioMenuItem.setOnAction(actionEvent -> this.selectedPrograms = new Tuple<>(radioMenuItem.getText(), this.selectedPrograms.getSecond()));
             menu2.getItems().add(radioMenuItem);
         }
@@ -92,9 +98,6 @@ public class GameMenu {
         radioItem1.setGraphic(getIcon("/viewIcons/human.png", 20));
         // Add to menu
         menu2.getItems().add(radioItem1);
-        // Make sure that the radio buttons cant be selected at the same time
-        ToggleGroup toggleGroup1 = new ToggleGroup();
-        radioItem1.setToggleGroup(toggleGroup1);
         return menu2;
     }
 
@@ -106,7 +109,11 @@ public class GameMenu {
     private Menu createMenu3() {
         Menu menu3 = new Menu("Spieler_B");
         RadioMenuItem radioItem3 = new RadioMenuItem("_Mensch");
-        RadioMenuItem radioItem4 = new RadioMenuItem("_Computer");
+        radioItem3.setOnAction(actionEvent -> this.selectedPrograms = new Tuple<>(radioItem3.getText(), this.selectedPrograms.getSecond()));
+
+        // Make sure that the radio buttons cant be selected at the same time
+        ToggleGroup toggleGroup2 = new ToggleGroup();
+        radioItem3.setToggleGroup(toggleGroup2);
 
         // Retrieves all keys (the file names) of the HashMap from the program manager
         // to display them in the menu
@@ -114,20 +121,15 @@ public class GameMenu {
         for (String programFileName: hashMap.keySet()) {
             RadioMenuItem radioMenuItem = new RadioMenuItem(programFileName);
             radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png", 20));
+            radioMenuItem.setToggleGroup(toggleGroup2);
             radioMenuItem.setOnAction(actionEvent -> this.selectedPrograms = new Tuple<>(this.selectedPrograms.getFirst(), radioMenuItem.getText()));
             menu3.getItems().add(radioMenuItem);
         }
 
         // Set icons
         radioItem3.setGraphic(getIcon("/viewIcons/human.png", 20));
-        radioItem4.setGraphic(getIcon("/viewIcons/AI.png", 20));
         // Add to menu
         menu3.getItems().add(radioItem3);
-        menu3.getItems().add(radioItem4);
-        // Make sure that the radio buttons cant be selected at the same time
-        ToggleGroup toggleGroup2 = new ToggleGroup();
-        radioItem3.setToggleGroup(toggleGroup2);
-        radioItem4.setToggleGroup(toggleGroup2);
         return menu3;
     }
 

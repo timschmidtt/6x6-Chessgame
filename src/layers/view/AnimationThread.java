@@ -21,13 +21,13 @@ public class AnimationThread extends Thread {
         Tuple<Integer, Integer> boardPanelMove = getBoardPanelMove(this.move);
         Tuple<Integer, Integer> startPosition = new Tuple<>(this.move.getFirst().getColumn() * 100, this.move.getFirst().getRow() * 100);
         int index = 1;
-        while (index != 51) {
+        while (index != 101) {
             try {
-                Thread.sleep(1100 / 50);
+                Thread.sleep(1100 / 100);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            Tuple<Double, Double> animationMove = new Tuple<>((double) (index * boardPanelMove.getFirst() / 50) + 7.5, (double) (index * boardPanelMove.getSecond() / 50) + 15);
+            Tuple<Double, Double> animationMove = new Tuple<>((double) (index * boardPanelMove.getFirst() / 100) + 7.5, (double) (index * boardPanelMove.getSecond() / 100) + 15);
             boardPanel.drawMovingPiece(startPosition, animationMove, this.piece);
             index++;
         }

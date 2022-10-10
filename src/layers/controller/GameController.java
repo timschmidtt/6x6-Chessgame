@@ -11,7 +11,6 @@ import layers.model.pieces.Piece;
 import layers.view.View;
 import programloader.Program;
 import programloader.ProgramManager;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,13 +41,21 @@ public class GameController {
 
   public synchronized void startNewGame() {
     restartGame();
-
     Tuple<String, String> selectedPrograms = this.view.getGameMenu().getSelectedPrograms();
     HashMap<String, Program> programHashmap = this.programManager.getProgramHashMap();
 
+    // Init players selected in radio menu
     Player[] players = new Player[2];
-    players[0] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getFirst()), false, "Spieler A");
-    players[1] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getSecond()), true, "Spieler B");
+    if (selectedPrograms.getFirst().equals("_Mensch")) {
+      players[0] = new HumanPlayer(false, "Spieler A");
+    } else {
+      players[0] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getFirst()), false, "Spieler A");
+    }
+    if (selectedPrograms.getSecond().equals("_Mensch")) {
+      players[1] = new HumanPlayer(true, "Spieler B");
+    } else {
+      players[1] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getSecond()), true, "Spieler B");
+    }
 
     this.view.getStartButton().setDisable(true);
     this.view.getStopButton().setDisable(false);
