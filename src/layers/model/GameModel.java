@@ -43,17 +43,24 @@ public class GameModel extends Thread {
                 return;
             }
             setCurrentMove(this.currentPlayer.getLastMove());
+            this.getBoard().executeMove(getCurrentMove());
             // Check if the last move was legal
-            if (this.referee.checkMove(this.currentMove, this.board)) {
-                this.getBoard().executeMove(getCurrentMove());
-            } else {
-                // If the move made by a player wasn't correct we will just end the game
-                break;
+            /*
+            TODO: Implement this!
+            if (this.currentMove != null) {
+                if (this.referee.checkMove(this.currentMove, this.board)) {
+                    this.getBoard().executeMove(getCurrentMove());
+                } else {
+                    // If the move made by a player wasn't correct we will just end the game
+                    break;
+                }
             }
+             */
             // Check if the King was beaten
             checkGameEnd();
             if (!isEnd()) {
                 nextPlayer();
+                System.out.println("nächster");
             } else {
                 endGame();
                 return;
