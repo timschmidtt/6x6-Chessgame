@@ -21,6 +21,7 @@ public class GameController {
   private GameModel model;
   private Piece activePiece;
   private Tuple<Integer, Integer> activePieceCoordinates;
+  private ProgramManager programManager;
 
   public GameController(View view, GameModel model) {
     this.view = view;
@@ -28,6 +29,7 @@ public class GameController {
     this.view.setGameController(this);
     this.view.setOnAction();
     new EventController(this);
+    this.programManager = new ProgramManager();
   }
 
   public void initNewHumanGame() {
@@ -40,14 +42,13 @@ public class GameController {
 
   public synchronized void startNewGame() {
     restartGame();
-    ProgramManager programManager = new ProgramManager();
 
     Tuple<String, String> selectedPrograms = this.view.getGameMenu().getSelectedPrograms();
-    HashMap<String, Program> programHashmap = programManager.getProgramHashMap();
+    HashMap<String, Program> programHashmap = this.programManager.getProgramHashMap();
 
     Player[] players = new Player[2];
-    players[0] = programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getFirst()), false, "Spieler A");
-    players[1] = programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getSecond()), true, "Spieler B");
+    players[0] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getFirst()), false, "Spieler A");
+    players[1] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getSecond()), true, "Spieler B");
 
     this.view.getStartButton().setDisable(true);
     this.view.getStopButton().setDisable(false);

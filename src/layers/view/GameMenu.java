@@ -114,7 +114,7 @@ public class GameMenu {
         for (String programFileName: hashMap.keySet()) {
             RadioMenuItem radioMenuItem = new RadioMenuItem(programFileName);
             radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png", 20));
-            radioMenuItem.setOnAction(actionEvent -> this.selectedPrograms = new Tuple<>(this.selectedPrograms.getSecond(), radioMenuItem.getText()));
+            radioMenuItem.setOnAction(actionEvent -> this.selectedPrograms = new Tuple<>(this.selectedPrograms.getFirst(), radioMenuItem.getText()));
             menu3.getItems().add(radioMenuItem);
         }
 
