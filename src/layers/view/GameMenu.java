@@ -1,5 +1,6 @@
 package layers.view;
 
+import javafx.event.EventType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
@@ -10,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import layers.model.Tuple;
 import programloader.Program;
 import programloader.ProgramManager;
 import java.util.ArrayList;
@@ -21,9 +23,11 @@ public class GameMenu {
 
     private ProgramManager programManager;
     private final List<Menu> menus;
+    private Tuple<String, String> selectedPrograms;
 
     public GameMenu() {
         this.programManager = new ProgramManager();
+        this.selectedPrograms = new Tuple<>("", "");
         this.menus = new ArrayList<>();
         this.menus.add(createMenu1());
         this.menus.add(createMenu2());
@@ -73,27 +77,24 @@ public class GameMenu {
     private Menu createMenu2() {
         Menu menu2 = new Menu("Spieler_A");
         RadioMenuItem radioItem1 = new RadioMenuItem("_Mensch");
-        RadioMenuItem radioItem2 = new RadioMenuItem("_Computer");
 
         // Retrieves all keys (the file names) of the HashMap from the program manager
         // to display them in the menu
         HashMap<String, Program> hashMap = this.programManager.getProgramHashMap();
         for (String programFileName: hashMap.keySet()) {
-            RadioMenuItem radioMenuItem = new RadioMenuItem("_" + programFileName);
+            RadioMenuItem radioMenuItem = new RadioMenuItem(programFileName);
             radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png", 20));
+            radioMenuItem.setOnAction(actionEvent -> this.selectedPrograms = new Tuple<>(radioMenuItem.getText(), this.selectedPrograms.getSecond()));
             menu2.getItems().add(radioMenuItem);
         }
 
         // Set icons
         radioItem1.setGraphic(getIcon("/viewIcons/human.png", 20));
-        radioItem2.setGraphic(getIcon("/viewIcons/AI.png", 20));
         // Add to menu
         menu2.getItems().add(radioItem1);
-        menu2.getItems().add(radioItem2);
         // Make sure that the radio buttons cant be selected at the same time
         ToggleGroup toggleGroup1 = new ToggleGroup();
         radioItem1.setToggleGroup(toggleGroup1);
-        radioItem2.setToggleGroup(toggleGroup1);
         return menu2;
     }
 
@@ -111,8 +112,9 @@ public class GameMenu {
         // to display them in the menu
         HashMap<String, Program> hashMap = this.programManager.getProgramHashMap();
         for (String programFileName: hashMap.keySet()) {
-            RadioMenuItem radioMenuItem = new RadioMenuItem("_" + programFileName);
+            RadioMenuItem radioMenuItem = new RadioMenuItem(programFileName);
             radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png", 20));
+            radioMenuItem.setOnAction(actionEvent -> this.selectedPrograms = new Tuple<>(this.selectedPrograms.getSecond(), radioMenuItem.getText()));
             menu3.getItems().add(radioMenuItem);
         }
 
@@ -146,5 +148,9 @@ public class GameMenu {
 
     public List<Menu> getMenus() {
         return this.menus;
+    }
+
+    public Tuple<String, String> getSelectedPrograms() {
+        return this.selectedPrograms;
     }
 }

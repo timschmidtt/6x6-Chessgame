@@ -22,6 +22,7 @@ public class View extends Application {
     private final GameModel gameModel;
     private GameController gameController;
     private BoardPanel chessBoardPanel;
+    private final GameMenu gameMenu;
 
     // Declaration of the buttons
     private Button openButton;
@@ -33,6 +34,7 @@ public class View extends Application {
 
 
     public View(GameModel gameModel, Stage stage) {
+        this.gameMenu = new GameMenu();
         this.gameModel = gameModel;
         start(stage);
     }
@@ -43,10 +45,9 @@ public class View extends Application {
      * @param stage the stage give by the main class.
      */
     public void start(Stage stage) {
-        GameMenu gameMenu = new GameMenu();
-        Menu menu1 = gameMenu.getMenus().get(0);
-        Menu menu2 = gameMenu.getMenus().get(1);
-        Menu menu3 = gameMenu.getMenus().get(2);
+        Menu menu1 = this.gameMenu.getMenus().get(0);
+        Menu menu2 = this.gameMenu.getMenus().get(1);
+        Menu menu3 = this.gameMenu.getMenus().get(2);
 
         // Create the menuBar and add its menus
         MenuBar menubar = new MenuBar();
@@ -71,7 +72,7 @@ public class View extends Application {
         toolBar.getItems().add(this.startButton);
         toolBar.getItems().add(this.stopButton);
         // Create a boardPanel as place to draw the chess game and place it in a pane
-        this.chessBoardPanel = new BoardPanel(600, 600, getGameModel());
+        this.chessBoardPanel = new BoardPanel(600, 600, this.gameModel);
         Pane chessboard = new Pane(chessBoardPanel);
         chessboard.setMaxSize(600, 600);
         chessboard.setMinSize(600, 600);
@@ -113,7 +114,7 @@ public class View extends Application {
     public void setOnAction() {
         this.openButton.setOnAction(actionEvent -> this.gameController.openNewGameGui());
         this.saveButton.setOnAction(actionEvent -> this.gameController.saveCurrentGame());
-        // this.startButton.setOnAction(actionEvent -> this.gameController.startNewDummyGame());
+        this.startButton.setOnAction(actionEvent -> this.gameController.startNewGame());
         this.stopButton.setOnAction(actionEvent -> this.gameController.stopGame());
     }
 
@@ -147,10 +148,6 @@ public class View extends Application {
         this.gameController = gameController;
     }
 
-    public GameModel getGameModel() {
-        return gameModel;
-    }
-
     public BoardPanel getBoardPanel() {
         return chessBoardPanel;
     }
@@ -161,5 +158,9 @@ public class View extends Application {
 
     public Button getStopButton() {
         return this.stopButton;
+    }
+
+    public GameMenu getGameMenu() {
+        return this.gameMenu;
     }
 }
