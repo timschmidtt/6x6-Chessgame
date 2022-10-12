@@ -47,11 +47,11 @@ public class GameMenu {
         MenuItem menuItem4 = new MenuItem("_Stoppen");
         MenuItem menuItem5 = new MenuItem("_Beenden");
         // Set icons
-        menuItem1.setGraphic(getIcon("/viewIcons/open_folder.png", 20));
-        menuItem2.setGraphic(getIcon("/viewIcons/print_button.png", 20));
-        menuItem3.setGraphic(getIcon("/viewIcons/play_button.png", 20));
-        menuItem4.setGraphic(getIcon("/viewIcons/stop_button.png", 20));
-        menuItem5.setGraphic(getIcon("/viewIcons/close.png", 20));
+        menuItem1.setGraphic(getIcon("/viewIcons/open_folder.png"));
+        menuItem2.setGraphic(getIcon("/viewIcons/print_button.png"));
+        menuItem3.setGraphic(getIcon("/viewIcons/play_button.png"));
+        menuItem4.setGraphic(getIcon("/viewIcons/stop_button.png"));
+        menuItem5.setGraphic(getIcon("/viewIcons/close.png"));
         // Set Accelerators
         menuItem1.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
         menuItem2.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN));
@@ -88,14 +88,14 @@ public class GameMenu {
         HashMap<String, Program> hashMap = this.programManager.getProgramHashMap();
         for (String programFileName: hashMap.keySet()) {
             RadioMenuItem radioMenuItem = new RadioMenuItem(programFileName);
-            radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png", 20));
+            radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png"));
             radioMenuItem.setToggleGroup(toggleGroup1);
             radioMenuItem.setOnAction(actionEvent -> this.selectedPrograms = new Tuple<>(radioMenuItem.getText(), this.selectedPrograms.getSecond()));
             menu2.getItems().add(radioMenuItem);
         }
 
         // Set icons
-        radioItem1.setGraphic(getIcon("/viewIcons/human.png", 20));
+        radioItem1.setGraphic(getIcon("/viewIcons/human.png"));
         // Add to menu
         menu2.getItems().add(radioItem1);
         return menu2;
@@ -109,7 +109,7 @@ public class GameMenu {
     private Menu createMenu3() {
         Menu menu3 = new Menu("Spieler_B");
         RadioMenuItem radioItem3 = new RadioMenuItem("_Mensch");
-        radioItem3.setOnAction(actionEvent -> this.selectedPrograms = new Tuple<>(radioItem3.getText(), this.selectedPrograms.getSecond()));
+        radioItem3.setOnAction(actionEvent -> this.selectedPrograms = new Tuple<>(this.selectedPrograms.getFirst(), radioItem3.getText()));
 
         // Make sure that the radio buttons cant be selected at the same time
         ToggleGroup toggleGroup2 = new ToggleGroup();
@@ -120,14 +120,14 @@ public class GameMenu {
         HashMap<String, Program> hashMap = this.programManager.getProgramHashMap();
         for (String programFileName: hashMap.keySet()) {
             RadioMenuItem radioMenuItem = new RadioMenuItem(programFileName);
-            radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png", 20));
+            radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png"));
             radioMenuItem.setToggleGroup(toggleGroup2);
             radioMenuItem.setOnAction(actionEvent -> this.selectedPrograms = new Tuple<>(this.selectedPrograms.getFirst(), radioMenuItem.getText()));
             menu3.getItems().add(radioMenuItem);
         }
 
         // Set icons
-        radioItem3.setGraphic(getIcon("/viewIcons/human.png", 20));
+        radioItem3.setGraphic(getIcon("/viewIcons/human.png"));
         // Add to menu
         menu3.getItems().add(radioItem3);
         return menu3;
@@ -137,13 +137,12 @@ public class GameMenu {
      * Method for getting an Imageview from an url.
      *
      * @param url  the path of the image resource
-     * @param size the size the imageview need to have
      * @return An imageview.
      */
-    private ImageView getIcon(String url, int size) {
+    private ImageView getIcon(String url) {
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(url)));
         ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(size);
+        imageView.setFitHeight(20);
         imageView.setPreserveRatio(true);
         return imageView;
     }

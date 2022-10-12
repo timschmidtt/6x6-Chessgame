@@ -13,7 +13,7 @@ public class Main extends Application {
     GameModel gameModel = new GameModel();
     View view = new View(gameModel, stage);
     GameController gameController = new GameController(view, gameModel);
-    gameController.initNewHumanGame();
+    gameController.initGameSequence();
   }
 
   public static void main(String[] args) {

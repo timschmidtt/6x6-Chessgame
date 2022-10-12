@@ -6,7 +6,7 @@ import layers.model.GameModel;
 import layers.model.Square;
 import layers.model.Tuple;
 import layers.model.actors.Player;
-import layers.model.actors.player.HumanPlayer;
+import layers.model.actors.humanPlayer.HumanPlayer;
 import layers.model.pieces.Piece;
 import layers.view.View;
 import programloader.Program;
@@ -27,14 +27,13 @@ public class GameController {
     this.model = model;
     this.view.setGameController(this);
     this.view.setOnAction();
-    new EventController(this);
     this.programManager = new ProgramManager();
   }
 
-  public void initNewHumanGame() {
+  public void initGameSequence() {
     Player[] players = new Player[2];
-    players[0] = new HumanPlayer(false, "Spieler A");
-    players[1] = new HumanPlayer(true, "Spieler B");
+    players[0] = new HumanPlayer(false, "Spieler A", this);
+    players[1] = new HumanPlayer(true, "Spieler B", this);
     getModel().setPlayers(players);
     getModel().setCurrentPlayer(players[0]);
   }
@@ -47,12 +46,12 @@ public class GameController {
     // Init players selected in radio menu
     Player[] players = new Player[2];
     if (selectedPrograms.getFirst().equals("_Mensch")) {
-      players[0] = new HumanPlayer(false, "Spieler A");
+      players[0] = new HumanPlayer(false, "Spieler A", this);
     } else {
       players[0] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getFirst()), false, "Spieler A");
     }
     if (selectedPrograms.getSecond().equals("_Mensch")) {
-      players[1] = new HumanPlayer(true, "Spieler B");
+      players[1] = new HumanPlayer(true, "Spieler B", this);
     } else {
       players[1] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getSecond()), true, "Spieler B");
     }
@@ -65,6 +64,7 @@ public class GameController {
     this.model.start();
   }
 
+  /*
   public void respondToReleasedMouse(MouseEvent mouseEvent) {
     Tuple<Integer, Integer> endCoordinates = this.view.getBoardPanel().getCoordinates(mouseEvent);
     if (this.activePiece != null) {
@@ -109,18 +109,19 @@ public class GameController {
       this.view.getBoardPanel().drawActivePieceOnCursor(mouseCoordinates, activePieceMoves);
     }
   }
+   */
 
   private void restartGame() {
     this.model = new GameModel();
     this.view.getBoardPanel().setBoard(this.model.getBoard());
-    initNewHumanGame();
+    initGameSequence();
   }
 
   public void openNewGameGui() {
     GameModel gameModel = new GameModel();
     View view = new View(gameModel, new Stage());
     GameController gameController = new GameController(view, gameModel);
-    gameController.initNewHumanGame();
+    gameController.initGameSequence();
   }
 
   public View getView() {
