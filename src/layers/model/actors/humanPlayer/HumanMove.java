@@ -53,9 +53,9 @@ public class HumanMove extends Thread implements EventHandler<MouseEvent> {
       }
     }
 
-    this.chessBoard.setOnMousePressed(this);
-    this.chessBoard.setOnMouseDragged(this);
-    this.chessBoard.setOnMouseReleased(this);
+    this.chessBoard.setOnMousePressed(null);
+    this.chessBoard.setOnMouseDragged(null);
+    this.chessBoard.setOnMouseReleased(null);
   }
 
   @Override
@@ -98,16 +98,6 @@ public class HumanMove extends Thread implements EventHandler<MouseEvent> {
   }
 
   private void mouseReleased(MouseEvent mouseEvent) {
-    Tuple<Integer, Integer> endCoordinates = this.view.getBoardPanel().getCoordinates(mouseEvent);
-    if (this.activePiece != null) {
-      Square fromSquare = this.model.getBoard().getSquare(this.activePieceCoordinates.getFirst(), this.activePieceCoordinates.getSecond());
-      Square toSquare = this.model.getBoard().getSquare(endCoordinates.getFirst(), endCoordinates.getSecond());
-      Tuple<Square, Square> moveSquare = new Tuple<>(fromSquare, toSquare);
-      if (this.model.getReferee().checkMove(moveSquare, this.model.getBoard())) {
-        this.move = moveSquare;
-      }
-    }
-
     synchronized (this.syncObject) {
       // Reset current action
       /*
@@ -115,6 +105,16 @@ public class HumanMove extends Thread implements EventHandler<MouseEvent> {
       this.panel.initRedraw();
 
        */
+
+      Tuple<Integer, Integer> endCoordinates = this.view.getBoardPanel().getCoordinates(mouseEvent);
+      if (this.activePiece != null) {
+        Square fromSquare = this.model.getBoard().getSquare(this.activePieceCoordinates.getFirst(), this.activePieceCoordinates.getSecond());
+        Square toSquare = this.model.getBoard().getSquare(endCoordinates.getFirst(), endCoordinates.getSecond());
+        Tuple<Square, Square> moveSquare = new Tuple<>(fromSquare, toSquare);
+        //if (this.model.getReferee().checkMove(moveSquare, this.model.getBoard())) {
+          this.move = moveSquare;
+        //}
+      }
 
       // Unlock
       this.syncObject.notify();

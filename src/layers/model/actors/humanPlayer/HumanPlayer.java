@@ -22,7 +22,17 @@ public class HumanPlayer extends Player {
   public Tuple<Square, Square> getNextMove(Tuple<Square, Square> move) {
     HumanMove humanMove = new HumanMove(view, model);
     humanMove.setDaemon(true);
-    humanMove.start();
-    return humanMove.getMove();
+
+    Tuple<Square, Square> nextMove = null;
+    try {
+      humanMove.start();
+      humanMove.join();
+
+      move = humanMove.getMove();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+
+    return move;
   }
 }
