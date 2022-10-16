@@ -24,6 +24,10 @@ public class Tuple<X, Y> {
     }
 
     public boolean equals(Object obj) {
-        return this == obj;
+        if (obj instanceof Tuple) {
+            Tuple <X, Y> tuple = (Tuple<X, Y>) obj;
+            return tuple.getFirst().equals(this.getFirst()) && tuple.getSecond().equals(this.getSecond());
+        }
+        return false;
     }
 }

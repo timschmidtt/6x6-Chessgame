@@ -14,12 +14,6 @@ import static javafx.scene.input.MouseEvent.MOUSE_RELEASED;
  * @since 12.09.22
  */
 public class EventController implements EventHandler<MouseEvent> {
-    @Override
-    public void handle(MouseEvent event) {
-
-    }
-
-    /*
     private final GameController gameController;
 
     public EventController(GameController gameController) {
@@ -55,6 +49,4 @@ public class EventController implements EventHandler<MouseEvent> {
     private GameController getGameController() {
         return this.gameController;
     }
-
-     */
 }

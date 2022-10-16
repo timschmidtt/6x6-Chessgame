@@ -9,21 +9,21 @@ import layers.view.View;
 
 public class HumanPlayer extends Player {
 
-  private final View view;
-  private final GameModel model;
+  private HumanMove humanMove;
 
-  public HumanPlayer(Boolean color, String name, GameController gameController) {
+  public HumanPlayer(Boolean color, String name) {
     super(color, name);
-    this.view = gameController.getView();
-    this.model = gameController.getModel();
   }
 
   @Override
   public Tuple<Square, Square> getNextMove(Tuple<Square, Square> move) {
-    HumanMove humanMove = new HumanMove(view, model);
+    this.humanMove = new HumanMove();
     humanMove.setDaemon(true);
 
-    Tuple<Square, Square> nextMove = null;
+    if (move != null) {
+      getChessBoard().executeMove(move);
+    }
+
     try {
       humanMove.start();
       humanMove.join();
@@ -34,5 +34,9 @@ public class HumanPlayer extends Player {
     }
 
     return move;
+  }
+
+  public HumanMove getHumanMove() {
+    return this.humanMove;
   }
 }

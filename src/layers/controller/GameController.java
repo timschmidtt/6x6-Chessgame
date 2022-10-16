@@ -28,12 +28,23 @@ public class GameController {
     this.view.setGameController(this);
     this.view.setOnAction();
     this.programManager = new ProgramManager();
+    new EventController(this);
   }
 
   public void initGameSequence() {
     Player[] players = new Player[2];
-    players[0] = new HumanPlayer(false, "Spieler A", this);
-    players[1] = new HumanPlayer(true, "Spieler B", this);
+    players[0] = new Player(false, "Spieler A") {
+      @Override
+      public Tuple<Square, Square> getNextMove(Tuple<Square, Square> move) {
+        return null;
+      }
+    };
+    players[1] = new Player(true, "Spieler B") {
+      @Override
+      public Tuple<Square, Square> getNextMove(Tuple<Square, Square> move) {
+        return null;
+      }
+    };
     getModel().setPlayers(players);
     getModel().setCurrentPlayer(players[0]);
   }
@@ -46,12 +57,12 @@ public class GameController {
     // Init players selected in radio menu
     Player[] players = new Player[2];
     if (selectedPrograms.getFirst().equals("_Mensch")) {
-      players[0] = new HumanPlayer(false, "Spieler A", this);
+      players[0] = new HumanPlayer(false, "Spieler A");
     } else {
       players[0] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getFirst()), false, "Spieler A");
     }
     if (selectedPrograms.getSecond().equals("_Mensch")) {
-      players[1] = new HumanPlayer(true, "Spieler B", this);
+      players[1] = new HumanPlayer(true, "Spieler B");
     } else {
       players[1] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getSecond()), true, "Spieler B");
     }
@@ -64,52 +75,63 @@ public class GameController {
     this.model.start();
   }
 
-  /*
   public void respondToReleasedMouse(MouseEvent mouseEvent) {
-    Tuple<Integer, Integer> endCoordinates = this.view.getBoardPanel().getCoordinates(mouseEvent);
-    if (this.activePiece != null) {
-      Square fromSquare = this.model.getBoard().getSquare(this.activePieceCoordinates.getFirst(), this.activePieceCoordinates.getSecond());
-      Square toSquare = this.model.getBoard().getSquare(endCoordinates.getFirst(), endCoordinates.getSecond());
-      Tuple<Square, Square> moveSquare = new Tuple<>(fromSquare, toSquare);
-      if (this.model.getReferee().checkMove(moveSquare, getModel().getBoard())) {
-        if (this.model.getReferee().isKingBeaten(moveSquare)) {
-          this.model.endGame();
+    if (this.model.getCurrentPlayer() instanceof HumanPlayer) {
+      Tuple<Integer, Integer> endCoordinates = this.view.getBoardPanel().getCoordinates(mouseEvent);
+      if (this.activePiece != null) {
+        Square fromSquare =
+            this.model.getBoard().getSquare(this.activePieceCoordinates.getFirst(), this.activePieceCoordinates.getSecond());
+        Square toSquare = this.model.getBoard().getSquare(endCoordinates.getFirst(), endCoordinates.getSecond());
+        Tuple<Square, Square> moveSquare = new Tuple<>(fromSquare, toSquare);
+        if (this.model.getReferee().checkMove(moveSquare, getModel().getBoard())) {
+          /*
+          if (this.model.getReferee().isKingBeaten(moveSquare)) {
+            this.model.endGame();
+          }
+           */
+          HumanPlayer humanPlayer = (HumanPlayer) this.model.getCurrentPlayer();
+          humanPlayer.getHumanMove().setMove(moveSquare);
+          /*
+          this.model.getBoard().executeMove(moveSquare);
+          this.model.nextPlayer();
+          if (this.model.isEnd()) {
+            restartGame();
+          }
+           */
         }
-        this.model.getBoard().executeMove(moveSquare);
-        this.model.nextPlayer();
-        if (this.model.isEnd()) {
-          restartGame();
-        }
+        this.view.getBoardPanel().resetView(null);
       }
-      this.view.getBoardPanel().resetView(null);
     }
   }
 
   public void respondToPressedMouse(MouseEvent mouseEvent) {
-    Tuple<Integer, Integer> coordinates = this.view.getBoardPanel().getCoordinates(mouseEvent);
-    int x = coordinates.getFirst();
-    int y = coordinates.getSecond();
-    Piece piece = this.model.getBoard().getSquare(x, y).getPiece();
-    if (piece != null) {
-      if (this.model.getReferee().canPieceGetSelected(x, y, this.model.getBoard())) {
-        this.activePieceCoordinates = new Tuple<>(x, y);
-        this.activePiece = piece;
-        this.view.getBoardPanel().setActivePiece(piece, getActivePieceCoordinates());
+    if (this.model.getCurrentPlayer() instanceof HumanPlayer) {
+      Tuple<Integer, Integer> coordinates = this.view.getBoardPanel().getCoordinates(mouseEvent);
+      int x = coordinates.getFirst();
+      int y = coordinates.getSecond();
+      Piece piece = this.model.getBoard().getSquare(x, y).getPiece();
+      if (piece != null) {
+        if (this.model.getReferee().canPieceGetSelected(x, y, this.model.getBoard())) {
+          this.activePieceCoordinates = new Tuple<>(x, y);
+          this.activePiece = piece;
+          this.view.getBoardPanel().setActivePiece(piece, getActivePieceCoordinates());
+        }
       }
     }
   }
 
   public void respondToDraggedMouse(MouseEvent mouseEvent) {
-    double x = mouseEvent.getX();
-    double y = mouseEvent.getY();
-    if (this.activePiece != null) {
-      Tuple<Double, Double> mouseCoordinates = new Tuple<>(x, y);
-      List<Tuple<Integer, Integer>> activePieceMoves =
-          this.model.getReferee().getPossibleMoves(this.activePiece, this.activePieceCoordinates, this.model.getBoard());
-      this.view.getBoardPanel().drawActivePieceOnCursor(mouseCoordinates, activePieceMoves);
+    if (this.model.getCurrentPlayer() instanceof HumanPlayer) {
+      double x = mouseEvent.getX();
+      double y = mouseEvent.getY();
+      if (this.activePiece != null) {
+        Tuple<Double, Double> mouseCoordinates = new Tuple<>(x, y);
+        List<Tuple<Integer, Integer>> activePieceMoves =
+            this.model.getReferee().getPossibleMoves(this.activePiece, this.activePieceCoordinates, this.model.getBoard());
+        this.view.getBoardPanel().drawActivePieceOnCursor(mouseCoordinates, activePieceMoves);
+      }
     }
   }
-   */
 
   private void restartGame() {
     this.model = new GameModel();

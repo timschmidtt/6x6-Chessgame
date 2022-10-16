@@ -3,7 +3,6 @@ package layers.model;
 import layers.model.actors.Player;
 import layers.model.actors.Referee;
 import layers.model.pieces.Piece;
-
 import java.util.Objects;
 
 /**
@@ -46,7 +45,6 @@ public class GameModel extends Thread {
             this.getBoard().executeMove(getCurrentMove());
             // Check if the last move was legal
             /*
-            TODO: Implement this!
             if (this.currentMove != null) {
                 if (this.referee.checkMove(this.currentMove, this.board)) {
                     this.getBoard().executeMove(getCurrentMove());
