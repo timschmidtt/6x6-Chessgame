@@ -39,7 +39,8 @@ public class GameModel extends Thread {
             } catch (InterruptedException e) {
                 return;
             }
-            // Set the executed move from the current player as the current move and execute it
+            // Set the executed move from the current player as the
+            // current move and execute itaq
             setCurrentMove(this.currentPlayer.getLastMove());
             this.getBoard().executeMove(this.currentMove);
             try {
