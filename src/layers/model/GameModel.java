@@ -4,10 +4,11 @@ import layers.model.actors.Player;
 import layers.model.actors.Referee;
 import layers.model.pieces.Piece;
 import java.util.Objects;
+import java.util.Observer;
 
 /**
- * This is the basic structure of every game. It consists of a {@link Referee}, a {@link Board}, two {@link Player}s, a boolean if the game
- * is ended and the current move.
+ * This is the basic structure of every game. It consists of a {@link Referee},
+ * a {@link Board}, two {@link Player}s, a boolean if the game is ended and the current move.
  */
 public class GameModel extends Thread {
 
@@ -26,51 +27,33 @@ public class GameModel extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            if (this.isInterrupted()) {
-                break;
-            }
-            // Create a new thread where dummy player can make his move
+        while (!this.isInterrupted()) {
+            // Create a new thread where a player can make his move
             MoveThread moveThread = new MoveThread(this.currentPlayer, this.currentMove);
             moveThread.setDaemon(true);
             moveThread.start();
             try {
                 //noinspection BusyWait
-                Thread.sleep(1100);
+                Thread.sleep(100);
                 moveThread.join();
             } catch (InterruptedException e) {
                 return;
             }
+            // Set the executed move from the current player as the current move and execute it
             setCurrentMove(this.currentPlayer.getLastMove());
-            this.getBoard().executeMove(getCurrentMove());
-            // Check if the last move was legal
-            /*
-            if (this.currentMove != null) {
-                if (this.referee.checkMove(this.currentMove, this.board)) {
-                    this.getBoard().executeMove(getCurrentMove());
-                } else {
-                    // If the move made by a player wasn't correct we will just end the game
-                    break;
-                }
-            }
-             */
-            // Check if the King was beaten
-            checkGameEnd();
-            if (!isEnd()) {
-                nextPlayer();
-                System.out.println("nächster");
-            } else {
-                endGame();
+            this.getBoard().executeMove(this.currentMove);
+            try {
+                //noinspection BusyWait
+                Thread.sleep(1200);
+                moveThread.join();
+            } catch (InterruptedException e) {
                 return;
             }
-        }
-    }
-
-    private void checkGameEnd() {
-        Piece lastBeatenPiece = getCurrentPlayer().getLastMove().getSecond().getPiece();
-        if (lastBeatenPiece != null) {
-            if (Objects.equals(lastBeatenPiece.getName(), "King")) {
-                endGame();
+            // Check via the referee if the king was beaten
+            if (this.referee.isKingBeaten(currentMove)) {
+                return;
+            } else {
+                nextPlayer();
             }
         }
     }

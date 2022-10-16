@@ -2,20 +2,25 @@ package layers.controller;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-
 import static javafx.scene.input.MouseEvent.MOUSE_DRAGGED;
 import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
 import static javafx.scene.input.MouseEvent.MOUSE_RELEASED;
 
 /**
- * DOC: Document me Tim !
+ * The EventController will control all thrown events and assign them
+ * into the GameController to the right method.
  *
- * @author Tim Schmidt (tim.schmidt@cewe.de)
+ * @author Tim Schmidt (timschmidt@ewe.de)
  * @since 12.09.22
  */
 public class EventController implements EventHandler<MouseEvent> {
     private final GameController gameController;
 
+    /**
+     * In the constructor all events that need to be watched get registered.
+     *
+     * @param gameController The GameController.
+     */
     public EventController(GameController gameController) {
         this.gameController = gameController;
         gameController.getView().getBoardPanel().addEventHandler(MOUSE_PRESSED, this);
@@ -23,6 +28,11 @@ public class EventController implements EventHandler<MouseEvent> {
         gameController.getView().getBoardPanel().addEventHandler(MOUSE_RELEASED, this);
     }
 
+    /**
+     * This method will assign the mouseEvent to the right method.
+     *
+     * @param mouseEvent the event which occurred.
+     */
     @Override
     public void handle(MouseEvent mouseEvent) {
         if (MOUSE_PRESSED.equals(mouseEvent.getEventType())) {
@@ -35,18 +45,14 @@ public class EventController implements EventHandler<MouseEvent> {
     }
 
     private void mousePressed(MouseEvent mouseEvent) {
-        getGameController().respondToPressedMouse(mouseEvent);
+        this.gameController.respondToPressedMouse(mouseEvent);
     }
 
     private void mouseDragged(MouseEvent mouseEvent) {
-        getGameController().respondToDraggedMouse(mouseEvent);
+        this.gameController.respondToDraggedMouse(mouseEvent);
     }
 
     private void mouseReleased(MouseEvent mouseEvent) {
-        getGameController().respondToReleasedMouse(mouseEvent);
-    }
-
-    private GameController getGameController() {
-        return this.gameController;
+        this.gameController.respondToReleasedMouse(mouseEvent);
     }
 }

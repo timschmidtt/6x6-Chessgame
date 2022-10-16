@@ -148,20 +148,25 @@ public class BoardPanel extends Canvas implements Observer {
     }
 
     /**
-     * This method will draw the current chessboard. Should be called after a move were executed on the board.
+     * This method will update the chessboard and start an AnimationThread. This should be called after
+     * every executed move.
+     *
+     * @param object The move that was executed.
      */
     @SuppressWarnings("unchecked")
     public void resetView(Object object) {
+        // Just check that the move inst null to avoid nullPointers
         if (object != null) {
+            // Cast to the move
             Tuple<Square, Square> move = (Tuple<Square, Square>) object;
+            // Set the active piece and redraw for safety
             setActivePiece(move.getFirst().getPiece(), new Tuple<>(move.getSecond().getColumn(), move.getSecond().getRow()));
             drawChessBoard(getGraphicsContext2D(), this.chessBoard);
             drawPieces();
-            if (object.getClass().equals(Tuple.class)) {
-                AnimationThread animationThread = new AnimationThread(move, this);
-                animationThread.setDaemon(true);
-                animationThread.start();
-            }
+            // Start the AnimationThread
+            AnimationThread animationThread = new AnimationThread(move, this);
+            animationThread.setDaemon(true);
+            animationThread.start();
         } else {
             drawChessBoard(getGraphicsContext2D(), this.chessBoard);
             setActivePiece(null, new Tuple<>(-1, -1));

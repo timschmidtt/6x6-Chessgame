@@ -4,21 +4,20 @@ import layers.model.Board;
 import layers.model.Square;
 import layers.model.Tuple;
 import layers.model.pieces.Piece;
+import utils.Observable;
+import utils.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Referee {
+public class Referee extends Observable {
 
     private Player currentPlayer;
 
-    public Referee() {
-    }
-
     /**
-     * At first the move get checked for the common chess rules by {@link #checkCommonChessRules(Piece, Piece)}. After, it will be
-     * checked if the chosen move is compatible with chosen piece.
+     * At first the move get checked for the common chess rules by {@link #checkCommonChessRules(Piece, Piece)}.
+     * After, it will be checked if the chosen move is compatible with chosen piece.
      *
      * @return A boolean if the move is legal
      */
@@ -49,6 +48,7 @@ public class Referee {
      */
     public boolean isKingBeaten(Tuple<Square, Square> move) {
         if (move.getSecond().getPiece() != null) {
+            notifyObservers(this, move);
             return move.getSecond().getPiece().getName().equals("King");
         }
         return false;
@@ -77,23 +77,18 @@ public class Referee {
      *
      * @param fromSquare the square from where the move starts.
      * @param toSquare   the square where the move ends.
-     *
      * @return The delta of the two squares.
      */
     private Tuple<Integer, Integer> calcSquareDelta(Square fromSquare, Square toSquare) {
-        return new Tuple<>(
-                toSquare.getColumn() - fromSquare.getColumn(),
-                toSquare.getRow() - fromSquare.getRow()
-        );
+        return new Tuple<>(toSquare.getColumn() - fromSquare.getColumn(), toSquare.getRow() - fromSquare.getRow());
     }
 
     /**
      * Checks if the given piece can be selected by the current player.
      *
-     * @param x The row of the wanted piece.
-     * @param y The column of the wanted piece.
+     * @param x          The row of the wanted piece.
+     * @param y          The column of the wanted piece.
      * @param chessboard The current chessboard.
-     *
      * @return If the current player is allowed to select the wanted piece.
      */
     public boolean canPieceGetSelected(int x, int y, Board chessboard) {
@@ -104,9 +99,8 @@ public class Referee {
      * Creates a list of possible moves of the given piece.
      *
      * @param activePiece The current active piece.
-     * @param fromSquare The start square of the active piece.
-     * @param board The current chessboard.
-     *
+     * @param fromSquare  The start square of the active piece.
+     * @param board       The current chessboard.
      * @return A list of possible moves of the given piece.
      */
     public List<Tuple<Integer, Integer>> getPossibleMoves(Piece activePiece, Tuple<Integer, Integer> fromSquare, Board board) {
@@ -125,9 +119,8 @@ public class Referee {
      * Proofs if a piece can execute a move on the current chessboard.
      *
      * @param fromSquare The start square of the piece.
-     * @param move The move that will be proofed.
-     * @param board The board where the move should be executed.
-     *
+     * @param move       The move that will be proofed.
+     * @param board      The board where the move should be executed.
      * @return If the move could be executed.
      */
     private boolean canTakeSquare(Tuple<Integer, Integer> fromSquare, Tuple<Integer, Integer> move, Board board) {
@@ -142,7 +135,9 @@ public class Referee {
         }
         return false;
     }
+
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
+        notifyObservers(this, this.currentPlayer);
     }
 }

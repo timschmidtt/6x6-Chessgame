@@ -11,8 +11,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import layers.controller.GameController;
 import layers.model.GameModel;
+import layers.model.Tuple;
+import layers.model.actors.Player;
 
 import java.util.Objects;
 
@@ -20,8 +21,7 @@ import java.util.Objects;
 public class View extends Application {
 
     private final GameModel gameModel;
-    private GameController gameController;
-    private BoardPanel chessBoardPanel;
+    private BoardPanel boardPanel;
     private final GameMenu gameMenu;
 
     // Declaration of the buttons
@@ -31,6 +31,8 @@ public class View extends Application {
     private Button startButton;
     private Button stopButton;
     private Button exitButton;
+    // Declaration of the panel
+    private Label labelInformation;
 
 
     public View(GameModel gameModel, Stage stage) {
@@ -48,7 +50,6 @@ public class View extends Application {
         Menu menu1 = this.gameMenu.getMenus().get(0);
         Menu menu2 = this.gameMenu.getMenus().get(1);
         Menu menu3 = this.gameMenu.getMenus().get(2);
-
         // Create the menuBar and add its menus
         MenuBar menubar = new MenuBar();
         menubar.getMenus().add(menu1);
@@ -72,8 +73,8 @@ public class View extends Application {
         toolBar.getItems().add(this.startButton);
         toolBar.getItems().add(this.stopButton);
         // Create a boardPanel as place to draw the chess game and place it in a pane
-        this.chessBoardPanel = new BoardPanel(600, 600, this.gameModel);
-        Pane chessboard = new Pane(chessBoardPanel);
+        this.boardPanel = new BoardPanel(600, 600, this.gameModel);
+        Pane chessboard = new Pane(boardPanel);
         chessboard.setMaxSize(600, 600);
         chessboard.setMinSize(600, 600);
         chessboard.setBorder(new Border(new BorderStroke(Color.BLACK,
@@ -97,7 +98,7 @@ public class View extends Application {
         Separator separator = new Separator(Orientation.HORIZONTAL);
 
         // Label at the bottom for information
-        Label labelInformation = new Label("Willkommen zum 6x6 Schach");
+        this.labelInformation = new Label("Willkommen zum 6x6 Schach");
         setLabelStyle(labelInformation);
 
         // Fill the main vBox with all the content to display
@@ -106,22 +107,15 @@ public class View extends Application {
 
         // Configuration of the stage
         stage.setTitle("6x6-Chess-Referee!");
-        Scene scene = new Scene(vBoxScene, 1280, 800);
+        Scene scene = new Scene(vBoxScene, 1400, 900);
         stage.setScene(scene);
         stage.show();
-    }
-
-    public void setOnAction() {
-        this.openButton.setOnAction(actionEvent -> this.gameController.openNewGameGui());
-        this.saveButton.setOnAction(actionEvent -> this.gameController.saveCurrentGame());
-        this.startButton.setOnAction(actionEvent -> this.gameController.startNewGame());
-        this.stopButton.setOnAction(actionEvent -> this.gameController.stopGame());
     }
 
     /**
      * Method for getting an Imageview from an url.
      *
-     * @param url  the path of the image resource
+     * @param url the path of the image resource
      * @return An imageview.
      */
     private ImageView getIcon(String url) {
@@ -144,12 +138,25 @@ public class View extends Application {
         label.setStyle("-fx-font-weight: bold; -fx-text-alignment: center; -fx-label-padding: 12, 0, 12, 0");
     }
 
-    public void setGameController(GameController gameController) {
-        this.gameController = gameController;
+    /**
+     * This method will update the label information under the chessboard. If the given
+     * object is a Player, we will just update the current player. If the given object
+     * is not a player but a tuple, we will set the current player as the winner of the game.
+     *
+     * @param object The given object.
+     */
+    public void updateLabelInformation(Object object) {
+        if (object instanceof Player) {
+            Player currentPlayer = (Player) object;
+            this.setLabelInformation(currentPlayer.getName() + " ist am Zug!");
+        } else if (object instanceof Tuple) {
+            String player = this.labelInformation.getText().substring(0, 9);;
+            this.setLabelInformation(player + " hat gewonnen!");
+        }
     }
 
     public BoardPanel getBoardPanel() {
-        return chessBoardPanel;
+        return boardPanel;
     }
 
     public Button getStartButton() {
@@ -160,7 +167,15 @@ public class View extends Application {
         return this.stopButton;
     }
 
+    public Button getOpenButton() {
+        return this.openButton;
+    }
+
     public GameMenu getGameMenu() {
         return this.gameMenu;
+    }
+
+    public void setLabelInformation(String text) {
+        this.labelInformation.setText(text);
     }
 }
