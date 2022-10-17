@@ -4,7 +4,6 @@ import javafx.scene.image.Image;
 import layers.model.Board;
 import layers.model.Square;
 import layers.model.Tuple;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
