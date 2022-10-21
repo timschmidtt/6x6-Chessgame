@@ -14,7 +14,6 @@ import programloader.Program;
 import programloader.ProgramManager;
 import utils.Observable;
 import utils.Observer;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -211,10 +210,6 @@ public class GameController implements Observer {
 
   public Tuple<Integer, Integer> getActivePieceCoordinates() {
     return this.activePieceCoordinates;
-  }
-
-  public void saveCurrentGame() {
-    // TODO: 24.09.22 Implement
   }
 
   public void stopGame() {

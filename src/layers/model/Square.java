@@ -1,5 +1,6 @@
 package layers.model;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import layers.model.pieces.Piece;
 
 public class Square {
@@ -12,6 +13,15 @@ public class Square {
         this.column = column;
         this.row = row;
         this.color = color;
+    }
+
+    // TODO comment
+    public Square cloneSquare() {
+        Square clone = new Square(this.column, this.row, this.color);
+        if (this.piece != null) {
+            clone.setPiece(this.piece);
+        }
+        return clone;
     }
 
     public Piece getPiece() {
