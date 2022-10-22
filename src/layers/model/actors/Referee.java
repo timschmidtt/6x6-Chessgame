@@ -5,8 +5,6 @@ import layers.model.Square;
 import layers.model.Tuple;
 import layers.model.pieces.Piece;
 import utils.Observable;
-import utils.Observer;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
