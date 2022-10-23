@@ -5,16 +5,19 @@ import layers.model.Tuple;
 import layers.model.pieces.Piece;
 
 /**
- * DOC: Document me Tim !
+ * The HumanMove thread is used to start a new move thread for a human player.
  *
- * @author Tim Schmidt (tim.schmidt@cewe.de)
- * @since 12.10.22
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
  */
 public class HumanMove extends Thread {
 
   private final Object syncObject = new Object();
   private Tuple<Square, Square> move;
 
+  /**
+   * The HumanMove thread will start and paused immediately. It will be
+   * paused till the human player makes a legal move. After it will be closed.
+   */
   @Override
   public void run() {
     synchronized (this.syncObject) {
@@ -36,27 +39,13 @@ public class HumanMove extends Thread {
    * @param move The move made by a HumanPlayer.
    */
   public void setMove(Tuple<Square, Square> move) {
-    // Get duplicates of the two squares that are involved in the move. We need to save
-    // duplicates of the squares as last move because otherwise after the first move is executed
+    // Get duplicates of the two squares that are involved in the move. We need to clone
+    // duplicates of the squares in the last move. Otherwise, after the first move is executed,
     // the square information are changed and the saved move could not be reused
-    int firstColumn = move.getFirst().getColumn();
-    int firstRow = move.getFirst().getRow();
-    Piece firstPiece = move.getFirst().getPiece();
-    boolean firstColor = move.getFirst().getColor();
-
-    int secondColumn = move.getSecond().getColumn();
-    int secondRow = move.getSecond().getRow();
-    Piece secondPiece = move.getSecond().getPiece();
-    boolean secondColor = move.getSecond().getColor();
-
-    Square first = new Square(firstColumn, firstRow, firstColor);
-    first.setPiece(firstPiece);
-    Square second = new Square(secondColumn, secondRow, secondColor);
-    if (secondPiece != null) {
-      second.setPiece(secondPiece);
-    }
-    this.move = new Tuple<>(first, second);
-
+    Square fromSquareClone = move.getFirst().cloneSquare();
+    Square toSquareClone = move.getSecond().cloneSquare();
+    this.move = new Tuple<>(fromSquareClone, toSquareClone);
+    // Notify the thread to continue
     synchronized (this.syncObject) {
       this.syncObject.notify();
     }

@@ -8,16 +8,21 @@ import layers.model.pieces.Queen;
 import layers.model.pieces.Rook;
 import utils.Observable;
 
+/**
+ * This is the basic structure of a board used for the game.
+ *
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
+ */
 public class Board extends Observable {
 
-    private final Square[][] chessBoard;
+    private final Square[][] board;
     private final int rows;
     private final int columns;
 
     public Board(int rows, int columns) {
         this.columns = columns;
         this.rows = rows;
-        this.chessBoard = createChessBoard();
+        this.board = createChessBoard();
         initPieces();
     }
 
@@ -46,29 +51,29 @@ public class Board extends Observable {
     private void initPieces() {
         // Set pawns
         for (int x = 0; x < 6; x++) {
-            this.chessBoard[x][1].setPiece(new Pawn(false));  // Black Pawns
-            this.chessBoard[x][4].setPiece(new Pawn(true));   // White Pawns
+            this.board[x][1].setPiece(new Pawn(false));  // Black Pawns
+            this.board[x][4].setPiece(new Pawn(true));   // White Pawns
         }
 
         // Set Rooks
-        this.chessBoard[0][0].setPiece(new Rook(false));      // Black Rooks
-        this.chessBoard[5][0].setPiece(new Rook(false));
-        this.chessBoard[0][5].setPiece(new Rook(true));       // White Rooks
-        this.chessBoard[5][5].setPiece(new Rook(true));
+        this.board[0][0].setPiece(new Rook(false));      // Black Rooks
+        this.board[5][0].setPiece(new Rook(false));
+        this.board[0][5].setPiece(new Rook(true));       // White Rooks
+        this.board[5][5].setPiece(new Rook(true));
 
         // Set Knights
-        this.chessBoard[1][0].setPiece(new Knight(false));  // Black Knights
-        this.chessBoard[4][0].setPiece(new Knight(false));
-        this.chessBoard[1][5].setPiece(new Knight(true));   // White Knights
-        this.chessBoard[4][5].setPiece(new Knight(true));
+        this.board[1][0].setPiece(new Knight(false));  // Black Knights
+        this.board[4][0].setPiece(new Knight(false));
+        this.board[1][5].setPiece(new Knight(true));   // White Knights
+        this.board[4][5].setPiece(new Knight(true));
 
         // Set Queens
-        this.chessBoard[2][0].setPiece(new Queen(false));    // Black Queen
-        this.chessBoard[3][5].setPiece(new Queen(true));     // White Queen
+        this.board[2][0].setPiece(new Queen(false));    // Black Queen
+        this.board[3][5].setPiece(new Queen(true));     // White Queen
 
         // Set Kings
-        this.chessBoard[3][0].setPiece(new King(false));      // Black King
-        this.chessBoard[2][5].setPiece(new King(true));       // White King
+        this.board[3][0].setPiece(new King(false));      // Black King
+        this.board[2][5].setPiece(new King(true));       // White King
     }
 
     /**
@@ -78,17 +83,17 @@ public class Board extends Observable {
      */
     public void executeMove(Tuple<Square, Square> move) {
         Piece piece = move.getFirst().getPiece();
-        this.chessBoard[move.getFirst().getColumn()][move.getFirst().getRow()].setPiece(null);
-        this.chessBoard[move.getSecond().getColumn()][move.getSecond().getRow()].setPiece(piece);
+        this.board[move.getFirst().getColumn()][move.getFirst().getRow()].setPiece(null);
+        this.board[move.getSecond().getColumn()][move.getSecond().getRow()].setPiece(piece);
         notifyObservers(this, move);
     }
 
     public Square getSquare(int column, int row) {
-        return this.chessBoard[column][row];
+        return this.board[column][row];
     }
 
     public Square getSquare(Square square) {
-        return this.chessBoard[square.getColumn()][square.getRow()];
+        return this.board[square.getColumn()][square.getRow()];
     }
 
     public int getRows() {

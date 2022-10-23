@@ -9,6 +9,8 @@ import java.util.Observer;
 /**
  * This is the basic structure of every game. It consists of a {@link Referee},
  * a {@link Board}, two {@link Player}s, a boolean if the game is ended and the current move.
+ *
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
  */
 public class GameModel extends Thread {
 

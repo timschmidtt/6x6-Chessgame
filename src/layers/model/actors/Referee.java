@@ -5,10 +5,17 @@ import layers.model.Square;
 import layers.model.Tuple;
 import layers.model.pieces.Piece;
 import utils.Observable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * The referee is used for controlling moves (mostly made by humans)
+ * and to ensure that no rules of the game get violated.
+ *
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
+ */
 public class Referee extends Observable {
 
     private Player currentPlayer;
@@ -30,6 +37,8 @@ public class Referee extends Observable {
         Tuple<Integer, Integer> squareDelta = calcSquareDelta(fromSquare, toSquare);
         AtomicBoolean isMoveLegal = new AtomicBoolean(false);
         Piece piece = fromSquare.getPiece();
+        // Compare the move with all possible moves of the piece and check if this
+        // move can be executed.
         piece.getMoves().forEach(move -> {
             if (move.equals(squareDelta) && piece.canMove(squareDelta, fromSquare, chessboard)) {
                 isMoveLegal.set(true);
@@ -60,11 +69,13 @@ public class Referee extends Observable {
      */
     private boolean checkCommonChessRules(Piece fromSquarePiece, Piece toSquarePiece) {
         boolean currentPlayerColor = this.currentPlayer.getColor();
+        // Just beat enemy pieces
         if (toSquarePiece != null) {
             if (0 == Boolean.compare(toSquarePiece.getColor(), currentPlayerColor)) {
                 return false;
             }
         }
+        // Just take squares with pieces and especially own pieces
         if (fromSquarePiece == null) {
             return false;
         } else return fromSquarePiece.getColor() == currentPlayerColor;
@@ -73,8 +84,8 @@ public class Referee extends Observable {
     /**
      * This method calculates the delta between two squares.
      *
-     * @param fromSquare the square from where the move starts.
-     * @param toSquare   the square where the move ends.
+     * @param fromSquare The square from where the move starts.
+     * @param toSquare   The square where the move ends.
      * @return The delta of the two squares.
      */
     private Tuple<Integer, Integer> calcSquareDelta(Square fromSquare, Square toSquare) {
@@ -134,6 +145,12 @@ public class Referee extends Observable {
         return false;
     }
 
+    /**
+     * Sets the current player to the given player and notify the observer
+     * that the current player has been changed
+     *
+     * @param currentPlayer The new current player.
+     */
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
         notifyObservers(this, this.currentPlayer);

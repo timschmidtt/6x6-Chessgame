@@ -6,6 +6,8 @@ import layers.model.Tuple;
 
 /**
  * Abstract class that defines the basic structure of all players.
+ *
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
  */
 public abstract class Player {
 

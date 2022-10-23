@@ -4,6 +4,10 @@ import layers.model.Square;
 import layers.model.Tuple;
 import layers.model.actors.Player;
 
+/**
+ *
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
+ */
 public class HumanPlayer extends Player {
 
     private HumanMove humanMove;
@@ -12,6 +16,14 @@ public class HumanPlayer extends Player {
         super(color, name);
     }
 
+    /**
+     * Retrieves the last executed move or null and execute it if not null.
+     * After it starts a {@link HumanMove} thread to get a move from the
+     * human player.
+     *
+     * @param move The last executed move.
+     * @return The move made by the player.
+     */
     @Override
     public Tuple<Square, Square> getNextMove(Tuple<Square, Square> move) {
         // If there was a previous move execute it
@@ -21,7 +33,6 @@ public class HumanPlayer extends Player {
         // Start the humanMove
         this.humanMove = new HumanMove();
         humanMove.setDaemon(true);
-
         try {
             humanMove.start();
             humanMove.join();

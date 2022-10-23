@@ -12,9 +12,14 @@ import layers.model.Tuple;
 import layers.model.pieces.Piece;
 import utils.Observable;
 import utils.Observer;
-
 import java.util.List;
 
+/**
+ * The BoardPanel is extended from {@link Canvas}. It will display the ongoing game
+ * with all its components like the pieces and squares.
+ *
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
+ */
 public class BoardPanel extends Canvas implements Observer {
 
     private final double PANEL_WIDTH;
@@ -31,6 +36,9 @@ public class BoardPanel extends Canvas implements Observer {
         initFirstSequence();
     }
 
+    /**
+     * This method will draw the chessboard after starting the application.
+     */
     private void initFirstSequence() {
         this.activePiece = null;
         this.activePieceCoordinates = new Tuple<>(-1, -1);

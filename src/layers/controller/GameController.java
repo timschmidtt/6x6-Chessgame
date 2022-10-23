@@ -17,6 +17,13 @@ import utils.Observer;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The game controller connects the view and the model and is a certain
+ * component of the model-view-controller architecture that is used in this
+ * project. Every data exchange needs to be completed via this controller.
+ *
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
+ */
 public class GameController implements Observer {
 
   private final View view;
@@ -178,7 +185,17 @@ public class GameController implements Observer {
   }
 
   /**
-   * Restarts the game model and view.
+   * Opens a new window with a new GuiGame that can be played while the old
+   * game is still running.
+   */
+  public void openNewGameGui() {
+    GameModel gameModel = new GameModel();
+    View view = new View(gameModel, new Stage());
+    new GameController(view, gameModel);
+  }
+
+  /**
+   * Restarts the game model and the view.
    */
   private void restartGame() {
     this.model = new GameModel();
@@ -187,13 +204,12 @@ public class GameController implements Observer {
   }
 
   /**
-   * Opens a new window with a new GuiGame that can be played while the old
-   * game is still running.
+   * Stop the current game and freeze it.
    */
-  public void openNewGameGui() {
-    GameModel gameModel = new GameModel();
-    View view = new View(gameModel, new Stage());
-    new GameController(view, gameModel);
+  public void stopGame() {
+    this.view.getStopButton().setDisable(true);
+    this.view.getStartButton().setDisable(false);
+    this.model.interrupt();
   }
 
   public View getView() {
@@ -210,11 +226,5 @@ public class GameController implements Observer {
 
   public Tuple<Integer, Integer> getActivePieceCoordinates() {
     return this.activePieceCoordinates;
-  }
-
-  public void stopGame() {
-    this.view.getStopButton().setDisable(true);
-    this.view.getStartButton().setDisable(false);
-    this.model.interrupt();
   }
 }

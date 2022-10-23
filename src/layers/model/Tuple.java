@@ -1,9 +1,12 @@
 package layers.model;
 
 /**
- * This data class can handle two not defined variables and saves them in it to get access to these two variables.
+ * This data class can handle two not defined variables and saves them in it
+ * to get access to these two variables.
  * @param <X>
  * @param <Y>
+ *
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
  */
 public class Tuple<X, Y> {
 

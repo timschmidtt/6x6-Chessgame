@@ -6,6 +6,10 @@ import layers.controller.GameController;
 import layers.model.GameModel;
 import layers.view.View;
 
+/**
+ * This will start the application.
+ *
+ */
 public class Main extends Application {
 
   @Override

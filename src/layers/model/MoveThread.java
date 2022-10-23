@@ -3,10 +3,9 @@ package layers.model;
 import layers.model.actors.Player;
 
 /**
- * DOC: Document me Tim !
+ * This is the basic thread used for executing moves.
  *
- * @author Tim Schmidt (tim.schmidt@cewe.de)
- * @since 19.09.22
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
  */
 public class MoveThread extends Thread {
 

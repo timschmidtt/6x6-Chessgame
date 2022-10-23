@@ -7,11 +7,10 @@ import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
 import static javafx.scene.input.MouseEvent.MOUSE_RELEASED;
 
 /**
- * The EventController will control all thrown events and assign them
- * into the GameController to the right method.
+ * The EventController will control all thrown events by an humanPlayer and
+ * assign them into the GameController to the right method.
  *
- * @author Tim Schmidt (timschmidt@ewe.de)
- * @since 12.09.22
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
  */
 public class EventController implements EventHandler<MouseEvent> {
     private final GameController gameController;
