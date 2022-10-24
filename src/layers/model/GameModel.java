@@ -46,12 +46,12 @@ public class GameModel extends Thread {
                 return;
             }
             // Set the executed move from the current player as the
-            // current move and execute itaq
+            // current move and execute it
             setCurrentMove(this.currentPlayer.getLastMove());
             this.getBoard().executeMove(this.currentMove);
             try {
                 //noinspection BusyWait
-                Thread.sleep(1200);
+                Thread.sleep(4200);
                 moveThread.join();
             } catch (InterruptedException e) {
                 return;
