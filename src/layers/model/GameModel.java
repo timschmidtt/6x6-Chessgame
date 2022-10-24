@@ -27,6 +27,10 @@ public class GameModel extends Thread {
         this.referee = new Referee();
     }
 
+    /**
+     * This is the thread of the game in the model and how the general game
+     * flow will be executed.
+     */
     @Override
     public void run() {
         while (!this.isInterrupted()) {
@@ -63,12 +67,13 @@ public class GameModel extends Thread {
 
     /**
      * Common method that should be used to start a game.
+     * (Just used by ConsoleGame)
      */
     public void startGame() {
     }
 
     /**
-     * This method will just switch the current player.
+     * This method will switch the current player.
      */
     public void nextPlayer() {
         if (currentPlayer == players[0]) {

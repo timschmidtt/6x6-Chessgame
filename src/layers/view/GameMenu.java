@@ -1,6 +1,5 @@
 package layers.view;
 
-import javafx.event.EventType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
@@ -19,6 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * This class is used for creating all menus that are being used in the gui.
+ *
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
+ */
 public class GameMenu {
 
     private ProgramManager programManager;

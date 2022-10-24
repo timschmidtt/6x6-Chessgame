@@ -30,7 +30,7 @@ public class Board extends Observable {
      * This method will fill the empty chessboard with {@link Square} new objects
      * and assign them their colors.
      *
-     * @return A filled chessboard.
+     * @return A filled board.
      */
     private Square[][] createChessBoard() {
         Square[][] chessBoard = new Square[getColumns()][getRows()];
@@ -46,7 +46,7 @@ public class Board extends Observable {
     }
 
     /**
-     * This method creates and places all pieces on the chessboard.
+     * This method creates and places all pieces on the board.
      */
     private void initPieces() {
         // Set pawns

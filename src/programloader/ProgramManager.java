@@ -1,6 +1,5 @@
 package programloader;
 
-
 import layers.model.actors.Player;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +13,8 @@ import java.util.jar.Attributes;
  * The ProgramManager is a class to load all jar files from the program directory. At the initialization
  * it will automatically check for every jar file if a class of a {@link Player} is found and try if this
  * class can be loaded and then put it into a HashMap that can be accessed by getter.
+ *
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
  */
 public class ProgramManager {
 

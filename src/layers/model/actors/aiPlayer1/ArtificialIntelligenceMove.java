@@ -5,15 +5,14 @@ import layers.model.Square;
 import layers.model.Tuple;
 import layers.model.actors.Player;
 import layers.model.pieces.Piece;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DOC: Document me Tim !
+ * This move class is used to identify the best possible move. Therefore, we search
+ * through an undefined depth of consecutive possible moves.
  *
- * @author Tim Schmidt (tim.schmidt@cewe.de)
- * @since 17.10.22
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
  */
 public class ArtificialIntelligenceMove {
 
@@ -31,6 +30,9 @@ public class ArtificialIntelligenceMove {
         executeMoveAction();
     }
 
+    /**
+     * This will execute a given move and then calculate the best move and execute it.
+     */
     public void executeMoveAction() {
         if (this.move != null) {
             this.board.executeMove(this.move);
@@ -39,20 +41,27 @@ public class ArtificialIntelligenceMove {
         this.board.executeMove(bestMove);
     }
 
-    // TODO comment
+    /**
+     * Decides if to use the maxValue or the minValue function.
+     *
+     * @return The min or max value and the best move.
+     */
     private Tuple<Tuple<Square, Square>, Integer> calcMove() {
         if (this.isMoving) {
-            return maxValue(this.searchingLevel);
+            return maxValue(this.searchingLevel, true);
         } else {
-            return minValue(this.searchingLevel);
+            return minValue(this.searchingLevel, false);
         }
     }
 
-    // TODO comment
-    private Tuple<Tuple<Square, Square>, Integer> maxValue(int searchingLevel) {
-
-        // TODO Spieler wechsel
-
+    /**
+     *
+     *
+     * @param searchingLevel
+     * @param isMoving
+     * @return
+     */
+    private Tuple<Tuple<Square, Square>, Integer> maxValue(int searchingLevel, boolean isMoving) {
         Tuple<Square, Square> bestMove = null;
         int highestValue = -99999999;
         // Request all possible moves to the current game situation
@@ -73,10 +82,10 @@ public class ArtificialIntelligenceMove {
                     simulatedMoveValue = ratingFunction(simulatedMove);
                 } else if (isMoving) {
                     // Player A turns
-                    result = maxValue(searchingLevel - 1);
+                    result = maxValue(searchingLevel - 1, false);
                 } else {
                     // Player B turns
-                    result = minValue(searchingLevel - 1);
+                    result = minValue(searchingLevel - 1, true);
                 }
                 // Restore the simulated move
                 undoMove(movesList.get(i));
@@ -94,13 +103,12 @@ public class ArtificialIntelligenceMove {
     }
 
     // TODO comment
-    private Tuple<Tuple<Square, Square>, Integer> minValue(int searchingLevel) {
+    private Tuple<Tuple<Square, Square>, Integer> minValue(int searchingLevel, boolean isMoving) {
         Tuple<Square, Square> bestMove = null;
         int lowestValue = 99999999;
         // Request all possible moves to the current game situation
         List<Tuple<Square, Square>> movesList = getAllNextMoves();
         Tuple<Tuple<Square, Square>, Integer> result = null;
-
         if (movesList != null) {
             for (int i = 0; i < movesList.size(); i++) {
                 // simulate a move
@@ -115,10 +123,10 @@ public class ArtificialIntelligenceMove {
                     simulatedMoveValue = ratingFunction(simulatedMove);
                 } else if (isMoving) {
                     // Player A turns
-                    result = maxValue(searchingLevel - 1);
+                    result = maxValue(searchingLevel - 1, false);
                 } else {
                     // Player B turns
-                    result = minValue(searchingLevel - 1);
+                    result = minValue(searchingLevel - 1, true);
                 }
                 // Restore the simulated move
                 undoMove(movesList.get(i));
@@ -134,7 +142,11 @@ public class ArtificialIntelligenceMove {
         return result;
     }
 
-    // TODO comment
+    /**
+     * This will execute a move on the own board but will not notify any observers.
+     *
+     * @param move The move to be simulated.
+     */
     private void simulateMove(Tuple<Square, Square> move) {
         // First we need to get the moving piece
         Piece piece = move.getFirst().getPiece();
@@ -144,7 +156,12 @@ public class ArtificialIntelligenceMove {
         this.board.getSquare(move.getFirst().getColumn(), move.getFirst().getRow()).setPiece(null);
     }
 
-    // TODO comment
+    /**
+     * This will undo a former executed move and set the
+     * board back to it former state.
+     *
+     * @param move The move to be undone.
+     */
     private void undoMove(Tuple<Square, Square> move) {
         // First get the pieces that were involved into the move
         Piece piece = move.getFirst().getPiece();
@@ -154,7 +171,14 @@ public class ArtificialIntelligenceMove {
         this.board.getSquare(move.getSecond().getColumn(), move.getSecond().getRow()).setPiece(beatenPiece);
     }
 
-    // TODO comment
+    /**
+     * This method is like the brain of the AI. It will rate how good or bad the current
+     * state of the board is for the given player. As higher the return value of this method
+     * is, as better the current state of the game is.
+     *
+     * @param move The last simulated move.
+     * @return A value how good the game state is.
+     */
     private int ratingFunction(Tuple<Square, Square> move) {
         // This will rate how good the current board is for the player
         Square fromSquare = move.getFirst();
@@ -164,7 +188,7 @@ public class ArtificialIntelligenceMove {
         if (toSquare.isPieceSet()) {
             switch (toSquare.getPiece().getName()) {
                 case "King":
-                    result += 200;
+                    result += 9999999;
                     break;
                 case "Queen":
                     result += 100;
@@ -181,15 +205,15 @@ public class ArtificialIntelligenceMove {
             }
 
         }
-
-
-
-
-
         return result;
     }
 
-    // TODO comment
+    /**
+     * Call this method to retrieve all possible executable moves of the current
+     * player for all his current being alive pieces.
+     *
+     * @return All possible moves.
+     */
     private List<Tuple<Square, Square>> getAllNextMoves() {
         List<Tuple<Square, Square>> moveList = new ArrayList<>();
         // Iterate over all squares
@@ -215,7 +239,16 @@ public class ArtificialIntelligenceMove {
         return null;
     }
 
-    // TODO comment
+    /**
+     * Checks if a given move of a given piece could be executed
+     * on the current board.
+     *
+     * @param move The given move to proof.
+     * @param fromSquare The square where the piece is standing.
+     * @param piece The piece that will do the move.
+     *
+     * @return If the move can be executed.
+     */
     private boolean isPossible(Tuple<Integer, Integer> move, Square fromSquare, Piece piece) {
         // Check if the move could be executed
         if (piece.canMove(move, fromSquare, this.board)) {
@@ -225,7 +258,7 @@ public class ArtificialIntelligenceMove {
     }
 
     /**
-     * Proofs if a piece can execute a move on the current chessboard.
+     * Proofs if a piece can execute a move on the current {@link Board}.
      *
      * @param fromSquare The start square of the piece.
      * @param move       The move that will be proofed.
@@ -245,7 +278,15 @@ public class ArtificialIntelligenceMove {
         return false;
     }
 
-    // TODO comment
+    /**
+     * Returns a {@link Tuple} with two {@link Square}s (fromSquare, toSquare) of the given move
+     * and the given fromSquare.
+     *
+     * @param move The given move.
+     * @param fromSquare The given fromSquare.
+     *
+     * @return A {@link Tuple} of two {@link Square}s.
+     */
     private Tuple<Square, Square> getMoveSquare(Tuple<Integer, Integer> move, Square fromSquare) {
         fromSquare = fromSquare.cloneSquare();
         Square toSquare = this.board.getSquare(fromSquare.getColumn() + move.getFirst(), fromSquare.getRow() + move.getSecond());

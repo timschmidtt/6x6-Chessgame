@@ -1,5 +1,11 @@
 package programloader;
 
+/**
+ * A class to store information about a program. Used like
+ * a data class or a record.
+ *
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
+ */
 public class Program {
 
   private String jarFileName;

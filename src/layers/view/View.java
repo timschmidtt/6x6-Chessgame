@@ -14,10 +14,15 @@ import javafx.stage.Stage;
 import layers.model.GameModel;
 import layers.model.Tuple;
 import layers.model.actors.Player;
-
 import java.util.Objects;
 
-
+/**
+ * The view is one of the main components of the model-view-controller architecture.
+ * In the view we create and use all important classes and components for displaying
+ * the game and its menus around it.
+ *
+ * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
+ */
 public class View extends Application {
 
     private final GameModel gameModel;
