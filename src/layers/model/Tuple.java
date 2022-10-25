@@ -3,9 +3,9 @@ package layers.model;
 /**
  * This data class can handle two not defined variables and saves them in it
  * to get access to these two variables.
+ *
  * @param <X>
  * @param <Y>
- *
  * @author Tim Schmidt (tim.schmidt@student.ibs-ol.de)
  */
 public class Tuple<X, Y> {
@@ -28,7 +28,7 @@ public class Tuple<X, Y> {
 
     public boolean equals(Object obj) {
         if (obj instanceof Tuple) {
-            Tuple <X, Y> tuple = (Tuple<X, Y>) obj;
+            Tuple<X, Y> tuple = (Tuple<X, Y>) obj;
             return tuple.getFirst().equals(this.getFirst()) && tuple.getSecond().equals(this.getSecond());
         }
         return false;

@@ -8,6 +8,7 @@ import layers.model.Square;
 import layers.model.Tuple;
 import layers.model.actors.Player;
 import layers.model.actors.aiPlayer1.AiPlayer1;
+import layers.model.actors.aiPlayer1.AiPlayer2;
 import layers.model.actors.humanPlayer.HumanPlayer;
 import layers.model.pieces.Piece;
 import layers.view.View;
@@ -55,7 +56,8 @@ public class GameController implements Observer {
     Player[] players = new Player[2];
     if (selectedPrograms.getFirst().equals("_Mensch")) {
       // If it's a HumanPlayer we just load the HumanPlayer and not a Jar
-      players[0] = new HumanPlayer(false, "Spieler A");
+      //players[0] = new HumanPlayer(false, "Spieler A");
+      players[0] = new AiPlayer2(false, "Spieler A");
     } else {
       players[0] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getFirst()), false, "Spieler A");
     }

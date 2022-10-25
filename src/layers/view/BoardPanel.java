@@ -12,6 +12,7 @@ import layers.model.Tuple;
 import layers.model.pieces.Piece;
 import utils.Observable;
 import utils.Observer;
+
 import java.util.List;
 
 /**

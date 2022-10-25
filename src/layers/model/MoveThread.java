@@ -9,17 +9,17 @@ import layers.model.actors.Player;
  */
 public class MoveThread extends Thread {
 
-  private final Player currentPlayer;
-  private final Tuple<Square, Square> currentMove;
+    private final Player currentPlayer;
+    private final Tuple<Square, Square> currentMove;
 
-  public MoveThread(Player currentPlayer, Tuple<Square, Square> currentMove) {
-    this.currentMove = currentMove;
-    this.currentPlayer = currentPlayer;
-  }
+    public MoveThread(Player currentPlayer, Tuple<Square, Square> currentMove) {
+        this.currentMove = currentMove;
+        this.currentPlayer = currentPlayer;
+    }
 
-  @Override
-  public void run() {
-    Tuple<Square, Square> lastMove = this.currentPlayer.getNextMove(this.currentMove);
-    this.currentPlayer.setLastMove(lastMove);
-  }
+    @Override
+    public void run() {
+        Tuple<Square, Square> lastMove = this.currentPlayer.getNextMove(this.currentMove);
+        this.currentPlayer.setLastMove(lastMove);
+    }
 }

@@ -17,7 +17,7 @@ public abstract class Player {
     private Tuple<Square, Square> lastMove;
 
     public Player(Boolean color, String name) {
-        this.chessBoard = new Board(6,6);
+        this.chessBoard = new Board(6, 6);
         this.color = color;
         this.name = name;
     }

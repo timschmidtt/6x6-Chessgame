@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import layers.model.GameModel;
 import layers.model.Tuple;
 import layers.model.actors.Player;
+
 import java.util.Objects;
 
 /**
@@ -155,7 +156,8 @@ public class View extends Application {
             Player currentPlayer = (Player) object;
             this.setLabelInformation(currentPlayer.getName() + " ist am Zug!");
         } else if (object instanceof Tuple) {
-            String player = this.labelInformation.getText().substring(0, 9);;
+            String player = this.labelInformation.getText().substring(0, 9);
+            ;
             this.setLabelInformation(player + " hat gewonnen!");
         }
     }

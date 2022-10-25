@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCombination;
 import layers.model.Tuple;
 import programloader.Program;
 import programloader.ProgramManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +91,7 @@ public class GameMenu {
         // Retrieves all keys (the file names) of the HashMap from the program manager
         // to display them in the menu
         HashMap<String, Program> hashMap = this.programManager.getProgramHashMap();
-        for (String programFileName: hashMap.keySet()) {
+        for (String programFileName : hashMap.keySet()) {
             RadioMenuItem radioMenuItem = new RadioMenuItem(programFileName);
             radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png"));
             radioMenuItem.setToggleGroup(toggleGroup1);
@@ -122,7 +123,7 @@ public class GameMenu {
         // Retrieves all keys (the file names) of the HashMap from the program manager
         // to display them in the menu
         HashMap<String, Program> hashMap = this.programManager.getProgramHashMap();
-        for (String programFileName: hashMap.keySet()) {
+        for (String programFileName : hashMap.keySet()) {
             RadioMenuItem radioMenuItem = new RadioMenuItem(programFileName);
             radioMenuItem.setGraphic(getIcon("/viewIcons/AI.png"));
             radioMenuItem.setToggleGroup(toggleGroup2);
@@ -140,7 +141,7 @@ public class GameMenu {
     /**
      * Method for getting an Imageview from an url.
      *
-     * @param url  the path of the image resource
+     * @param url the path of the image resource
      * @return An imageview.
      */
     private ImageView getIcon(String url) {

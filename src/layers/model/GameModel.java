@@ -48,7 +48,7 @@ public class GameModel extends Thread {
             this.getBoard().executeMove(this.currentMove);
             try {
                 //noinspection BusyWait
-                Thread.sleep(1300);
+                Thread.sleep(2300);
                 moveThread.join();
             } catch (InterruptedException e) {
                 return;
