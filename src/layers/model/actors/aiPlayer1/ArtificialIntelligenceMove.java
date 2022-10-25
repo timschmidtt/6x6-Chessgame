@@ -7,7 +7,7 @@ import layers.model.actors.Player;
 import layers.model.pieces.Piece;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This move class is used to identify the best possible move. Therefore, we search
@@ -46,24 +46,18 @@ public class ArtificialIntelligenceMove {
      */
     private Tuple<Tuple<Square, Square>, Integer> calcMove() {
         if (this.isMoving) {
-            return maxValue(this.searchingLevel, false);
+            return maxValue(this.searchingLevel, true);
         } else {
-            return minValue(this.searchingLevel, true);
+            return minValue(this.searchingLevel, false);
         }
     }
 
-    /**
-     *
-     *
-     * @param searchingLevel
-     * @param isMoving
-     * @return
-     */
-    private Tuple<Tuple<Square, Square>, Integer> maxValue(int searchingLevel, boolean isMoving) {
+    // TODO comment
+    private Tuple<Tuple<Square, Square>, Integer> maxValue(int searchingLevel, boolean activePlayer) {
         Tuple<Square, Square> bestMove = null;
         int highestValue = -99999999;
         // Request all possible moves to the current game situation
-        List<Tuple<Square, Square>> movesList = getAllNextMoves();
+        List<Tuple<Square, Square>> movesList = getAllNextMoves(activePlayer);
         Tuple<Tuple<Square, Square>, Integer> result = null;
         // Just check for null
             for (int i = 0; i < movesList.size(); i++) {
@@ -76,21 +70,27 @@ public class ArtificialIntelligenceMove {
                     // If there are no next moves we set the current move as the simulated,
                     // the same goes for the value
                     simulatedMove = movesList.get(i);
-                    simulatedMoveValue = ratingFunction(simulatedMove);
-                } else if (isMoving) {
+                    simulatedMoveValue = ratingFunction(simulatedMove, activePlayer);
+                } else if (activePlayer) {
                     // Player A turns
                     result = maxValue(searchingLevel - 1, false);
+                    simulatedMoveValue = result.getSecond();
+                    simulatedMove = result.getFirst();
                 } else {
                     // Player B turns
                     result = minValue(searchingLevel - 1, true);
+                    simulatedMoveValue = result.getSecond();
+                    simulatedMove = result.getFirst();
                 }
                 // Restore the simulated move
                 undoMove(movesList.get(i));
                 // If the current simulated move vale is higher as the current
                 // highest move vale we reassign the highest value and the best move
                 if (simulatedMoveValue > highestValue) {
-                    highestValue = simulatedMoveValue;
-                    bestMove = simulatedMove;
+                    if (isOwnMove(simulatedMove, activePlayer)) {
+                        highestValue = simulatedMoveValue;
+                        bestMove = simulatedMove;
+                    }
                 }
                 result = new Tuple<>(bestMove, highestValue);
             }
@@ -99,41 +99,52 @@ public class ArtificialIntelligenceMove {
     }
 
     // TODO comment
-    private Tuple<Tuple<Square, Square>, Integer> minValue(int searchingLevel, boolean isMoving) {
+    private Tuple<Tuple<Square, Square>, Integer> minValue(int searchingLevel, boolean activePlayer) {
         Tuple<Square, Square> bestMove = null;
         int lowestValue = 99999999;
         // Request all possible moves to the current game situation
-        List<Tuple<Square, Square>> movesList = getAllNextMoves();
+        List<Tuple<Square, Square>> movesList = getAllNextMoves(activePlayer);
         Tuple<Tuple<Square, Square>, Integer> result = null;
             for (int i = 0; i < movesList.size(); i++) {
                 // simulate a move
                 simulateMove(movesList.get(i));
-                Tuple<Square, Square> simulatedMove = null;
+                Tuple<Square, Square> simulatedMove;
                 int simulatedMoveValue = 0;
                 // Decide if to go deeper or to stay on the current level
                 if (this.searchingLevel <= 1 || i + 1 < movesList.size()) {
                     // If there are no next moves we set the current move as the simulated,
                     // the same goes for the value
                     simulatedMove = movesList.get(i);
-                    simulatedMoveValue = ratingFunction(simulatedMove);
-                } else if (isMoving) {
+                    simulatedMoveValue = ratingFunction(simulatedMove, activePlayer);
+                } else if (activePlayer) {
                     // Player A turns
-                    result = minValue(searchingLevel - 1, false);
+                    result = maxValue(searchingLevel - 1, false);
+                    simulatedMoveValue = result.getSecond();
+                    simulatedMove = result.getFirst();
                 } else {
                     // Player B turns
-                    result = maxValue(searchingLevel - 1, true);
+                    result = minValue(searchingLevel - 1, true);
+                    simulatedMoveValue = result.getSecond();
+                    simulatedMove = result.getFirst();
                 }
                 // Restore the simulated move
                 undoMove(movesList.get(i));
                 // If the current simulated move vale is higher as the current
                 // highest move vale we reassign the highest value and the best move
                 if (simulatedMoveValue < lowestValue) {
+                    if (isOwnMove(simulatedMove, activePlayer)) {
                     lowestValue = simulatedMoveValue;
                     bestMove = simulatedMove;
+                    }
                 }
                 result = new Tuple<>(bestMove, lowestValue);
             }
         return result;
+    }
+
+    private boolean isOwnMove(Tuple<Square, Square> simulatedMove, boolean activePlayer) {
+        boolean pieceColor = simulatedMove.getFirst().getPiece().getColor();
+        return activePlayer == pieceColor;
     }
 
     /**
@@ -173,7 +184,7 @@ public class ArtificialIntelligenceMove {
      * @param move The last simulated move.
      * @return A value how good the game state is.
      */
-    private int ratingFunction(Tuple<Square, Square> move) {
+    private int ratingFunction(Tuple<Square, Square> move, boolean activePlayer) {
         // This will rate how good the current board is for the player
         Square fromSquare = move.getFirst();
         Square toSquare = move.getSecond();
@@ -185,74 +196,75 @@ public class ArtificialIntelligenceMove {
                     result += 999999;
                     break;
                 case "Queen":
-                    result += 100;
+                    result += 2000;
                     break;
                 case "Knight":
-                    result += 70;
+                    result += 1400;
                     break;
                 case "Rook":
-                    result += 60;
+                    result += 1200;
                     break;
                 case "Pawn":
-                    result += 10;
+                    result += 200;
                     break;
             }
         }
-
-      if (fromSquare.isPieceSet()) {
-        switch (fromSquare.getPiece().getName()) {
-          case "King":
-            result -= 20;
-            break;
-          case "Queen":
-            result -= 10;
-            break;
-          case "Knight":
-            result -= 6;
-            break;
-          case "Rook":
-            result -= 4;
-            break;
-          case "Pawn":
-            result -= 1;
-            break;
-        }
-      }
-
-      /*
-        if (isExposingKing()) {
-            result -= 99999;
-        }
-
-       */
 
         // Überprüfen wie viele meiner pieces können geschlagen werden und welche
         // gegnerische kann ich schlagen
-
-        /*
-        if (pieceCanGetBeaten) {
-            switch
-            piece name
-        }
-         */
-
-        /*
-        if (canBeatPieceNow) {
-
-        }
-         */
+        result += checkBeatablePieces(activePlayer);
         return result;
     }
 
-    private boolean isExposingKing() {
-        AtomicBoolean result = new AtomicBoolean(false);
-        List<Tuple<Square, Square>> moves = getAllNextMoves();
-        moves.forEach(move ->{
-            if (move.getSecond().isPieceSet()) {
-                if (move.getSecond().getPiece().getName().equals("King")) {
-                    result.set(true);
+    private int checkBeatablePieces(boolean activePlayer) {
+        AtomicInteger result = new AtomicInteger();
+        List<Tuple<Square, Square>> ownMoves = getAllNextMoves(activePlayer);
+        List<Tuple<Square, Square>> opponentMoves = getAllNextMoves(activePlayer);
+
+        ownMoves.forEach(ownMove -> {
+            if (ownMove.getSecond().isPieceSet()) {
+                Piece piece = ownMove.getSecond().getPiece();
+                switch (piece.getName()) {
+                    case "King":
+                        result.addAndGet(99999);
+                        break;
+                    case "Queen":
+                        result.addAndGet(200);
+                        break;
+                    case "Knight":
+                        result.addAndGet(140);
+                        break;
+                    case "Rook":
+                        result.addAndGet(120);
+                        break;
+                    case "Pawn":
+                        result.addAndGet(20);
+                        break;
                 }
             }
+        });
+
+        opponentMoves.forEach(opponentMove -> {
+          if (opponentMove.getSecond().isPieceSet()) {
+            Piece piece = opponentMove.getSecond().getPiece();
+            switch (piece.getName()) {
+              case "King":
+                result.addAndGet(-99999);
+                break;
+              case "Queen":
+                result.addAndGet(-200);
+                break;
+              case "Knight":
+                result.addAndGet(-140);
+                break;
+              case "Rook":
+                result.addAndGet(-120);
+                break;
+              case "Pawn":
+                result.addAndGet(-20);
+                break;
+            }
+          }
         });
         return result.get();
     }
@@ -263,7 +275,7 @@ public class ArtificialIntelligenceMove {
      *
      * @return All possible moves.
      */
-    private List<Tuple<Square, Square>> getAllNextMoves() {
+    private List<Tuple<Square, Square>> getAllNextMoves(boolean player) {
         List<Tuple<Square, Square>> moveList = new ArrayList<>();
         // Iterate over all squares
         for (int column = 0; column < this.board.getColumns(); column++) {
@@ -271,11 +283,11 @@ public class ArtificialIntelligenceMove {
                 Square square = board.getSquare(column, row);
                 // Check if there is a piece of the player
                 if (square.isPieceSet()) {
-                    if (square.getPiece().getColor() == this.isMoving) {
+                    if (square.getPiece().getColor() == player) {
                         Piece piece = square.getPiece();
                         piece.getMoves().forEach(move -> {
                             // Add all possible moves to the list
-                            if (isPossible(move, square, piece)) {
+                            if (isPossible(move, square, piece, player)) {
                                 Tuple<Square, Square> moveSquare = getMoveSquare(move, square);
                                 moveList.add(moveSquare);
                             }
@@ -297,10 +309,10 @@ public class ArtificialIntelligenceMove {
      *
      * @return If the move can be executed.
      */
-    private boolean isPossible(Tuple<Integer, Integer> move, Square fromSquare, Piece piece) {
+    private boolean isPossible(Tuple<Integer, Integer> move, Square fromSquare, Piece piece, boolean activePlayer) {
         // Check if the move could be executed
         if (piece.canMove(move, fromSquare, this.board)) {
-            return canTakeSquare(new Tuple<>(fromSquare.getColumn(), fromSquare.getRow()), move, this.board);
+            return canTakeSquare(new Tuple<>(fromSquare.getColumn(), fromSquare.getRow()), move, this.board, activePlayer);
         }
         return false;
     }
@@ -313,13 +325,13 @@ public class ArtificialIntelligenceMove {
      * @param board      The board where the move should be executed.
      * @return If the move could be executed.
      */
-    private boolean canTakeSquare(Tuple<Integer, Integer> fromSquare, Tuple<Integer, Integer> move, Board board) {
+    private boolean canTakeSquare(Tuple<Integer, Integer> fromSquare, Tuple<Integer, Integer> move, Board board, boolean activePlayer) {
         int column = fromSquare.getFirst() + move.getFirst();
         int row = fromSquare.getSecond() + move.getSecond();
         if (column <= 5 && column >= 0 && row <= 5 && row >= 0) {
             Square toSquare = board.getSquare(column, row);
             if (toSquare.getPiece() != null) {
-                return toSquare.getPiece().getColor() != isMoving;
+                return toSquare.getPiece().getColor() != activePlayer;
             }
             return true;
         }

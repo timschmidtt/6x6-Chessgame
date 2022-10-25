@@ -2,9 +2,6 @@ package layers.model;
 
 import layers.model.actors.Player;
 import layers.model.actors.Referee;
-import layers.model.pieces.Piece;
-import java.util.Objects;
-import java.util.Observer;
 
 /**
  * This is the basic structure of every game. It consists of a {@link Referee},
@@ -51,7 +48,7 @@ public class GameModel extends Thread {
             this.getBoard().executeMove(this.currentMove);
             try {
                 //noinspection BusyWait
-                Thread.sleep(4200);
+                Thread.sleep(1300);
                 moveThread.join();
             } catch (InterruptedException e) {
                 return;
