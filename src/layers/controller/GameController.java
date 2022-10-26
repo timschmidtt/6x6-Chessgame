@@ -57,14 +57,14 @@ public class GameController implements Observer {
     if (selectedPrograms.getFirst().equals("_Mensch")) {
       // If it's a HumanPlayer we just load the HumanPlayer and not a Jar
       //players[0] = new HumanPlayer(false, "Spieler A");
-      players[0] = new AiPlayer2(false, "Spieler A");
+      players[0] = new AiPlayer1(false, "Spieler A");
     } else {
       players[0] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getFirst()), false, "Spieler A");
     }
     if (selectedPrograms.getSecond().equals("_Mensch")) {
       // If it's a HumanPlayer we just load the HumanPlayer and not a Jar
       //players[1] = new HumanPlayer(true, "Spieler B");
-      players[1] = new AiPlayer1(true, "Spieler B");
+      players[1] = new AiPlayer2(true, "Spieler B");
     } else {
       players[1] = this.programManager.loadPlayerJarFile(programHashmap.get(selectedPrograms.getSecond()), true, "Spieler B");
     }

@@ -32,11 +32,8 @@ public class View extends Application {
 
     // Declaration of the buttons
     private Button openButton;
-    private Button saveButton;
-    private Button printButton;
     private Button startButton;
     private Button stopButton;
-    private Button exitButton;
     // Declaration of the panel
     private Label labelInformation;
 
@@ -63,18 +60,18 @@ public class View extends Application {
         menubar.getMenus().add(menu3);
         // Create the buttons for the toolBar
         this.openButton = new Button();
-        this.saveButton = new Button();
+        Button saveButton = new Button();
         this.startButton = new Button();
         this.stopButton = new Button();
         // Set the images of the buttons
         this.openButton.setGraphic(getIcon("/viewIcons/open_folder.png"));
-        this.saveButton.setGraphic(getIcon("/viewIcons/save_button.png"));
+        saveButton.setGraphic(getIcon("/viewIcons/save_button.png"));
         this.startButton.setGraphic(getIcon("/viewIcons/play_button.png"));
         this.stopButton.setGraphic(getIcon("/viewIcons/stop_button.png"));
         // Create the toolbar and add its buttons
         ToolBar toolBar = new ToolBar();
         toolBar.getItems().add(this.openButton);
-        toolBar.getItems().add(this.saveButton);
+        toolBar.getItems().add(saveButton);
         toolBar.getItems().add(new Separator());
         toolBar.getItems().add(this.startButton);
         toolBar.getItems().add(this.stopButton);

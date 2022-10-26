@@ -26,7 +26,7 @@ import java.util.Objects;
  */
 public class GameMenu {
 
-    private ProgramManager programManager;
+    private final ProgramManager programManager;
     private final List<Menu> menus;
     private Tuple<String, String> selectedPrograms;
 
