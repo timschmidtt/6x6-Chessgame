@@ -36,9 +36,9 @@ public class EventController implements EventHandler<MouseEvent> {
     public void handle(MouseEvent mouseEvent) {
         if (MOUSE_PRESSED.equals(mouseEvent.getEventType())) {
             mousePressed(mouseEvent);
-        } else if (MouseEvent.MOUSE_DRAGGED.equals(mouseEvent.getEventType())) {
+        } else if (MOUSE_DRAGGED.equals(mouseEvent.getEventType())) {
             mouseDragged(mouseEvent);
-        } else if (MouseEvent.MOUSE_RELEASED.equals(mouseEvent.getEventType())) {
+        } else if (MOUSE_RELEASED.equals(mouseEvent.getEventType())) {
             mouseReleased(mouseEvent);
         }
     }

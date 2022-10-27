@@ -48,14 +48,12 @@ public class ArtificialIntelligenceMove {
      */
     private Tuple<Tuple<Square, Square>, Integer> calcMove() {
 
-        return maxValue(this.searchingLevel);
-        /*
+        //return maxValue(this.searchingLevel);
         if (this.isMoving) {
             return maxValue(this.searchingLevel);
         } else {
             return minValue(this.searchingLevel);
         }
-         */
     }
 
     // TODO comment
@@ -222,6 +220,34 @@ public class ArtificialIntelligenceMove {
         result += beatableActions.getFirst();
         // Rate how good is it to opfer a piece
         //result += sacrificePiece(activePlayer, beatableActions.getSecond());
+        return result;
+    }
+
+    public int countPieceScore() {
+        // This will rate how good the current board is for the player
+        Square toSquare = move.getSecond();
+        int result = 0;
+        // We get the beaten piece that lead us to this situation. As more important
+        // the piece was as higher the points will be for it.
+        if (toSquare.isPieceSet()) {
+            switch (toSquare.getPiece().getName()) {
+                case "King":
+                    result += 999999;
+                    break;
+                case "Queen":
+                    result += 2000;
+                    break;
+                case "Knight":
+                    result += 1400;
+                    break;
+                case "Rook":
+                    result += 1200;
+                    break;
+                case "Pawn":
+                    result += 400;
+                    break;
+            }
+        }
         return result;
     }
 

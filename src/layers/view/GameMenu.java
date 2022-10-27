@@ -63,6 +63,8 @@ public class GameMenu {
         menuItem3.setAccelerator(new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN));
         menuItem4.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         menuItem5.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
+        // Disable menuItem4 (stopGame) till a game is started
+        menuItem4.setDisable(true);
         // Add items to menu
         menu1.getItems().add(menuItem1);
         menu1.getItems().add(new SeparatorMenuItem());

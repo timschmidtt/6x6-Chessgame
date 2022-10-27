@@ -68,6 +68,8 @@ public class View extends Application {
         saveButton.setGraphic(getIcon("/viewIcons/save_button.png"));
         this.startButton.setGraphic(getIcon("/viewIcons/play_button.png"));
         this.stopButton.setGraphic(getIcon("/viewIcons/stop_button.png"));
+        // Disable the buttons until they are needed
+        this.stopButton.setDisable(true);
         // Create the toolbar and add its buttons
         ToolBar toolBar = new ToolBar();
         toolBar.getItems().add(this.openButton);
@@ -106,7 +108,7 @@ public class View extends Application {
 
         // Fill the main vBox with all the content to display
         VBox vBoxScene = new VBox(menubar, toolBar, scrollPane, separator, labelInformation);
-        vBoxScene.setAlignment(Pos.CENTER);
+        vBoxScene.setAlignment(Pos.TOP_CENTER);
 
         // Configuration of the stage
         stage.setTitle("6x6-Chess-Referee!");
@@ -154,7 +156,6 @@ public class View extends Application {
             this.setLabelInformation(currentPlayer.getName() + " ist am Zug!");
         } else if (object instanceof Tuple) {
             String player = this.labelInformation.getText().substring(0, 9);
-            ;
             this.setLabelInformation(player + " hat gewonnen!");
         }
     }

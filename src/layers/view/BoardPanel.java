@@ -109,6 +109,12 @@ public class BoardPanel extends Canvas implements Observer {
         }
     }
 
+    /**
+     * TODO doc
+     * @param position
+     * @param move
+     * @param piece
+     */
     public void drawMovingPiece(Tuple<Integer, Integer> position, Tuple<Double, Double> move, Piece piece) {
         double x = move.getFirst() + position.getFirst();
         double y = move.getSecond() + position.getSecond();
