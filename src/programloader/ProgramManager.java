@@ -27,28 +27,6 @@ public class ProgramManager {
     }
 
     /**
-     * Can load a program (class of {@link Player}) dynamically while the runtime into a game.
-     *
-     * @param program The program to load.
-     * @param playerColor The color of the player.
-     * @param playerName The name of the player.
-     *
-     * @return A class of player.
-     */
-    public Player loadPlayerJarFile(Program program, boolean playerColor, String playerName) {
-        try {
-            JARClassLoader classLoader = new JARClassLoader(program.getJarFilePath());
-            Class<?> loadedClass = classLoader.loadClass(program.getClassFilePath());
-            Constructor<?> constructor = loadedClass.getDeclaredConstructor(Boolean.class, String.class);
-            Object player = constructor.newInstance(playerColor, playerName);
-            return (Player) player;
-        } catch (Throwable th) {
-            th.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
      * This method will check for every file in the programs folder if it is a jar file and then
      * try if it's loadable {@link #checkLoading(String, String, boolean, String)}. If this is
      * the case the program will be added to a HashMap.
@@ -59,36 +37,17 @@ public class ProgramManager {
         if (fileNames != null) {
             for (String jarFileName : fileNames) {
                 if (jarFileName.toLowerCase().endsWith(".jar")) {
-                    String jarFilePath = ProgramManager.PATH + File.separator + jarFileName;
+                    String jarFilePath = PATH + File.separator + jarFileName;
                     String classFilePath = this.getClassFilePath(jarFilePath);
                     if (classFilePath != null) {
                         boolean colorW = this.checkLoading(jarFilePath, classFilePath, true, "Spieler A");
                         boolean colorB = this.checkLoading(jarFilePath, classFilePath, false, "Spieler B");
                         if (colorW && colorB) {
-                            this.programHashMap.put(jarFileName, new Program(jarFileName, jarFilePath, classFilePath));
+                            this.programHashMap.put(jarFileName, new Program(jarFilePath, classFilePath));
                         }
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * Gets the value of the player attribute in the manifest file of the
-     * specified jar file.
-     *
-     * @param jarFilePath Path (folder + name) of the jar file.
-     * @return the value of the Player attribute.
-     */
-    private String getClassFilePath(String jarFilePath) {
-        try {
-            URL fileURL = new URL("file:" + jarFilePath);
-            URL jarURL = new URL("jar", "", fileURL + "!/");
-            JarURLConnection urlConnection = (JarURLConnection) jarURL.openConnection();
-            Attributes attributes = urlConnection.getMainAttributes();
-            return attributes != null ? attributes.getValue("Player") : null;
-        } catch (IOException e) {
-            return null;
         }
     }
 
@@ -112,6 +71,47 @@ public class ProgramManager {
         } catch (Throwable th) {
             th.printStackTrace();
             return false;
+        }
+    }
+
+    /**
+     * Can load a program (class of {@link Player}) dynamically while the runtime into a game.
+     *
+     * @param program The program to load.
+     * @param playerColor The color of the player.
+     * @param playerName The name of the player.
+     *
+     * @return A class of player.
+     */
+    public Player loadPlayerJarFile(Program program, boolean playerColor, String playerName) {
+        try {
+            JARClassLoader classLoader = new JARClassLoader(program.getJarFilePath());
+            Class<?> loadedClass = classLoader.loadClass(program.getClassFilePath());
+            Constructor<?> constructor = loadedClass.getDeclaredConstructor(Boolean.class, String.class);
+            Object player = constructor.newInstance(playerColor, playerName);
+            return (Player) player;
+        } catch (Throwable th) {
+            th.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Gets the value of the player attribute in the manifest file of the
+     * specified jar file.
+     *
+     * @param jarFilePath Path (folder + name) of the jar file.
+     * @return the value of the Player attribute.
+     */
+    private String getClassFilePath(String jarFilePath) {
+        try {
+            URL fileURL = new URL("file:" + jarFilePath);
+            URL jarURL = new URL("jar", "", fileURL + "!/");
+            JarURLConnection urlConnection = (JarURLConnection) jarURL.openConnection();
+            Attributes attributes = urlConnection.getMainAttributes();
+            return attributes != null ? attributes.getValue("Player") : null;
+        } catch (IOException e) {
+            return null;
         }
     }
 
