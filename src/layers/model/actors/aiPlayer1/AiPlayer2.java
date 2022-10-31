@@ -12,7 +12,7 @@ import layers.model.actors.Player;
  */
 public class AiPlayer2 extends Player {
 
-  private final int AI_LEVEL = 4;
+  private final int AI_LEVEL = 2;
 
   public AiPlayer2(Boolean color, String name) {
     super(color, name);

@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import layers.model.GameModel;
 import layers.model.Tuple;
 import layers.model.actors.Player;
-
 import java.util.Objects;
 
 /**

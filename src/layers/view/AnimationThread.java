@@ -24,7 +24,7 @@ public class AnimationThread extends Thread {
 
     /**
      * Here the thread get started. The move that will be animated will be divided
-     * into the 100 single parts. Each of them will be displayed seperated on the board
+     * into the 100 single parts. Each of them will be displayed separated on the board
      * in a short term, so it seems like the piece slides over it.
      */
     @Override

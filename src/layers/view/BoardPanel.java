@@ -110,10 +110,12 @@ public class BoardPanel extends Canvas implements Observer {
     }
 
     /**
-     * TODO doc
-     * @param position
-     * @param move
-     * @param piece
+     * This will draw the current active piece on the board panel at a specific
+     * position. With this method its possible to animate the move of a piece.
+     *
+     * @param position The start position of the piece.
+     * @param move The move that needs to be performed.
+     * @param piece The piece to draw.
      */
     public void drawMovingPiece(Tuple<Integer, Integer> position, Tuple<Double, Double> move, Piece piece) {
         double x = move.getFirst() + position.getFirst();

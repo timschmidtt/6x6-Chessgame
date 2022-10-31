@@ -24,8 +24,6 @@ public class ArtificialIntelligenceMove {
     private final int searchingLevel;
     private boolean isMoving;
 
-    private int debug = 0;
-
     public ArtificialIntelligenceMove(Tuple<Square, Square> move, int searchingLevel, Board board, Player player) {
         this.board = board;
         this.move = move;
@@ -60,7 +58,6 @@ public class ArtificialIntelligenceMove {
 
     // TODO comment
     private Tuple<Tuple<Square, Square>, Integer> maxValue(int searchingLevel) {
-        System.out.println(searchingLevel);
         Tuple<Square, Square> bestMove = null;
         int highestValue = -999999999;
         // Request all possible moves to the current game situation
@@ -74,7 +71,7 @@ public class ArtificialIntelligenceMove {
             int simulatedMoveValue;
             System.out.println(i + ",,," + movesList.size());
             // Decide if to go deeper or to stay on the current level
-            if (searchingLevel <= 1 || i + 1 < movesList.size()) {
+            if (searchingLevel <= 1) {
                 // If there are no next moves we set the current move as the simulated,
                 // the same goes for the value
                 simulatedMove = movesList.get(i);
@@ -85,7 +82,6 @@ public class ArtificialIntelligenceMove {
                 simulatedMoveValue = result.getSecond();
                 simulatedMove = result.getFirst();
             } else {
-                System.out.println("else");
                 // Player B turns
                 result = minValue(searchingLevel - 1);
                 simulatedMoveValue = result.getSecond();
@@ -95,6 +91,7 @@ public class ArtificialIntelligenceMove {
             undoMove(movesList.get(i));
             // If the current simulated move vale is higher as the current
             // highest move vale we reassign the highest value and the best move
+            System.out.println(simulatedMoveValue + " max");
             if (simulatedMoveValue > highestValue) {
                 highestValue = simulatedMoveValue;
                 bestMove = simulatedMove;
@@ -112,7 +109,6 @@ public class ArtificialIntelligenceMove {
 
     // TODO comment
     private Tuple<Tuple<Square, Square>, Integer> minValue(int searchingLevel) {
-        System.out.println(searchingLevel);
         Tuple<Square, Square> bestMove = null;
         int lowestValue = 999999999;
         // Request all possible moves to the current game situation
@@ -125,7 +121,7 @@ public class ArtificialIntelligenceMove {
             int simulatedMoveValue;
             System.out.println(i + ",,," + movesList.size());
             // Decide if to go deeper or to stay on the current level
-            if (this.searchingLevel <= 1 || i + 2 < movesList.size()) {
+            if (searchingLevel <= 1) {
                 // If there are no next moves we set the current move as the simulated,
                 // the same goes for the value
                 simulatedMove = movesList.get(i);
@@ -136,7 +132,6 @@ public class ArtificialIntelligenceMove {
                 simulatedMoveValue = result.getSecond();
                 simulatedMove = result.getFirst();
             } else {
-                System.out.println("else");
                 // Player B turns
                 result = minValue(searchingLevel - 1);
                 simulatedMoveValue = result.getSecond();
@@ -146,6 +141,7 @@ public class ArtificialIntelligenceMove {
             undoMove(movesList.get(i));
             // If the current simulated move vale is higher as the current
             // highest move vale we reassign the highest value and the best move
+            System.out.println(simulatedMoveValue + " min");
             if (simulatedMoveValue < lowestValue) {
                 lowestValue = simulatedMoveValue;
                 bestMove = simulatedMove;
@@ -173,7 +169,6 @@ public class ArtificialIntelligenceMove {
         this.board.getSquare(move.getSecond().getColumn(), move.getSecond().getRow()).setPiece(piece);
         this.board.getSquare(move.getFirst().getColumn(), move.getFirst().getRow()).setPiece(null);
         // Swap the player
-        this.isMoving = !this.isMoving;
     }
 
     /**
