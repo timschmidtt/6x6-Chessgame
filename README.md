@@ -1,5 +1,3 @@
-# TimSchmidtSimulator
-
 # **6x6 Schach**
 
 ### Information:
